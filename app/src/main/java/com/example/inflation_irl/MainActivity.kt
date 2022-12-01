@@ -4,35 +4,34 @@ import android.Manifest
 import android.content.pm.PackageManager
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.widget.Button
-import android.widget.TextView
 import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import com.example.inflation_irl.databinding.ActivityMainBinding
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
 
 class MainActivity : AppCompatActivity() {
     private lateinit var mapLocation: MapLocation;
     private var currentLocation: StoreEnum? = null;
+    private lateinit var binding: ActivityMainBinding
+
     companion object {
         const val MY_PERMISSIONS_REQUEST_LOCATION = 99
     };
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
-        applicationContext
+        binding = ActivityMainBinding.inflate(layoutInflater)
+        setContentView(binding.root)
         checkPermission(Manifest.permission.ACCESS_FINE_LOCATION, MY_PERMISSIONS_REQUEST_LOCATION)
         mapLocation = MapLocation(this);
-        val button = this.findViewById<Button>(R.id.getLocationButton)
-        val textView = this.findViewById<TextView>(R.id.textView)
-        button.setOnClickListener {
+
+        binding.getLocationButton.setOnClickListener {
             CoroutineScope(Dispatchers.Main).launch {
                 currentLocation = mapLocation.getLocation()
-                textView.text = currentLocation.toString()
+                binding.textView.text = currentLocation.toString()
             }
         }
     }
