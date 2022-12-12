@@ -27,13 +27,6 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
         checkPermission(Manifest.permission.ACCESS_FINE_LOCATION, MY_PERMISSIONS_REQUEST_LOCATION)
         mapLocation = MapLocation(this);
-
-        binding.getLocationButton.setOnClickListener {
-            CoroutineScope(Dispatchers.Main).launch {
-                currentLocation = mapLocation.getLocation()
-                binding.textView.text = currentLocation.toString()
-            }
-        }
     }
 
     fun checkPermission(permission: String, requestCode: Int) {

@@ -4,21 +4,20 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.util.Log
 import com.google.android.gms.common.api.ApiException
-import com.google.android.gms.tasks.Task
 import com.google.android.gms.tasks.Tasks
 import com.google.android.libraries.places.api.Places
 import com.google.android.libraries.places.api.model.Place
-import com.google.android.libraries.places.api.model.PlaceLikelihood
 import com.google.android.libraries.places.api.net.FindCurrentPlaceRequest
 import kotlinx.coroutines.*
-import java.util.concurrent.Future
+import kotlinx.coroutines.Dispatchers.IO
 
 class MapLocation(private val applicationContext: Context) {
     val TAG = "MyMapsActivity"
     val acceptedPlaces: Array<String> = arrayOf("selver", "prisma")
+
     @SuppressLint("MissingPermission")
     suspend fun getLocation(): StoreEnum? {
-        val match = withContext(Dispatchers.IO) {
+        val match = withContext(IO) {
             Places.initialize(applicationContext, "AIzaSyAViygAFms699z-JFoWsDB9MzVTegVHfQ4")
             val placesClient = Places.createClient(applicationContext)
             val placeFields: List<Place.Field> = listOf(Place.Field.NAME)
@@ -29,10 +28,11 @@ class MapLocation(private val applicationContext: Context) {
                 if (task.isSuccessful) {
                     val response = task.result
                     val placesFound = response.placeLikelihoods.map { it.place.name }
-                    run lit@ {
+                    run lit@{
                         placesFound.forEach { place ->
-                            val match = acceptedPlaces.filter { place.contains(it, ignoreCase = true) }
-                            if (match.size>0) {
+                            val match =
+                                acceptedPlaces.filter { place.contains(it, ignoreCase = true) }
+                            if (match.size > 0) {
                                 Log.i(TAG, place)
                                 when (match.get(0)) {
                                     "selver" -> finalMatch = StoreEnum.SELVER
@@ -56,6 +56,7 @@ class MapLocation(private val applicationContext: Context) {
         }
         return match;
     }
+
     fun stringContainsElementFromArray(string: String, array: Array<String>): Boolean {
         array.forEach {
             if (string.contains(it, ignoreCase = true)) return true;
