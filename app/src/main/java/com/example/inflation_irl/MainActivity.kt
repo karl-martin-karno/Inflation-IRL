@@ -3,6 +3,7 @@ package com.example.inflation_irl
 import android.Manifest
 import android.content.pm.PackageManager
 import android.os.Bundle
+import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
@@ -10,23 +11,27 @@ import androidx.core.content.ContextCompat
 import com.example.inflation_irl.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
-    private lateinit var mapLocation: MapLocation;
-    private var currentLocation: StoreEnum? = null;
+    private lateinit var mapLocation: MapLocation
+    private var currentLocation: StoreEnum? = null
     private lateinit var binding: ActivityMainBinding
+    private val items = listOf("Prisma", "Selver")
 
     companion object {
         const val MY_PERMISSIONS_REQUEST_LOCATION = 99
-    };
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
         checkPermission(Manifest.permission.ACCESS_FINE_LOCATION, MY_PERMISSIONS_REQUEST_LOCATION)
-        mapLocation = MapLocation(this);
+        mapLocation = MapLocation(this)
+
+        val adapter = ArrayAdapter(this, R.layout.shop_list_item, items)
+        binding.shopField.setAdapter(adapter)
     }
 
-    fun checkPermission(permission: String, requestCode: Int) {
+    private fun checkPermission(permission: String, requestCode: Int) {
         if (ContextCompat.checkSelfPermission(
                 this,
                 permission

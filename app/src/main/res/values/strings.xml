@@ -1,3 +1,9 @@
 <resources>
     <string name="app_name">Inflation-IRL</string>
+    <string name="product_title">Product title</string>
+    <string name="product_price">Product price</string>
+    <string name="add_picture_of_label">Add picture of label</string>
+    <string name="selected_shop">Selected shop</string>
+    <string name="search_price_history">Search price history</string>
+    <string name="picture_of_the_product_label">Picture of the product label</string>
 </resources>
