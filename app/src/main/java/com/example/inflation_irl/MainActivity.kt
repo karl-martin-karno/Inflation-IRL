@@ -20,12 +20,15 @@ import androidx.core.content.FileProvider
 import com.example.inflation_irl.databinding.ActivityMainBinding
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
+import com.google.firebase.storage.FirebaseStorage
+import com.google.firebase.storage.ktx.storage
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Dispatchers.Main
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.File
+import java.io.FileInputStream
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -36,6 +39,7 @@ class MainActivity : AppCompatActivity() {
     private val items = listOf(StoreEnum.PRISMA, StoreEnum.SELVER)
     private var imageFilePath: String? = null
     private val db = Firebase.firestore
+    private val storage = Firebase.storage
 
     companion object {
         const val MY_PERMISSIONS_REQUEST_LOCATION = 99
@@ -71,7 +75,6 @@ class MainActivity : AppCompatActivity() {
         binding.shopField.setAdapter(adapter)
 
         // Create a new user with a first, middle, and last name
-       
         setupAddPictureButton()
     }
 
@@ -168,4 +171,6 @@ class MainActivity : AppCompatActivity() {
             ).show()
         }
     }
+
+
 }
