@@ -18,6 +18,8 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
 import com.example.inflation_irl.databinding.ActivityMainBinding
+import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Dispatchers.Main
@@ -33,6 +35,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private val items = listOf(StoreEnum.PRISMA, StoreEnum.SELVER)
     private var imageFilePath: String? = null
+    private val db = Firebase.firestore
 
     companion object {
         const val MY_PERMISSIONS_REQUEST_LOCATION = 99
@@ -67,6 +70,8 @@ class MainActivity : AppCompatActivity() {
         val adapter = ArrayAdapter(this, R.layout.shop_list_item, items)
         binding.shopField.setAdapter(adapter)
 
+        // Create a new user with a first, middle, and last name
+       
         setupAddPictureButton()
     }
 
