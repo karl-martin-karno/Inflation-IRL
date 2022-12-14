@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "309289504674",
+    "project_id": "inflation-irl-a554d",
+    "storage_bucket": "inflation-irl-a554d.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:309289504674:android:1605a743236bb8d9436cfb",
+        "android_client_info": {
+          "package_name": "com.example.inflation_irl"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "309289504674-2vg6p9jn6uhjjihp2oo6ronhfb8l1ah6.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBZONLnzhANwkV22Z_06C2ZJVea7eP0-40"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "309289504674-2vg6p9jn6uhjjihp2oo6ronhfb8l1ah6.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
