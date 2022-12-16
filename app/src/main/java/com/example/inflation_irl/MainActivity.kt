@@ -22,6 +22,9 @@ import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.ktx.storage
+import com.google.mlkit.vision.barcode.BarcodeScanning
+import com.google.mlkit.vision.barcode.common.Barcode
+import com.google.mlkit.vision.common.InputImage
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Dispatchers.Main
@@ -59,10 +62,33 @@ class MainActivity : AppCompatActivity() {
                         withContext(Main) {
                             binding.productLabelImageView.setImageBitmap(scaledBmp)
                         }
+                        scanBarcode(bmp)
                     }
                 }
             }
         }
+
+
+    private fun scanBarcode(bitmap: Bitmap) {
+        val scanner = BarcodeScanning.getClient()
+        val image = InputImage.fromBitmap(bitmap, 0)
+        val result = scanner.process(image)
+            .addOnSuccessListener { barcodes ->
+                for (barcode in barcodes) {
+                    val bounds = barcode.boundingBox
+                    val corners = barcode.cornerPoints
+
+                    val rawValue = barcode.rawValue // barcode value
+
+                    val valueType = barcode.valueType
+                }
+            }
+            .addOnFailureListener {
+            }
+            .addOnCompleteListener {
+                scanner.close()
+            }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
