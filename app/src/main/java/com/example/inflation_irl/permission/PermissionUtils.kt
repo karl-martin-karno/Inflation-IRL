@@ -10,7 +10,11 @@ class PermissionUtils {
         fun onPermissionGranted()
     }
 
-    fun handleLocationPermissionsResult(context: Context, grantResults: IntArray, actionHandler: ActionHandler) {
+    fun handleLocationPermissionsResult(
+        context: Context,
+        grantResults: IntArray,
+        actionHandler: ActionHandler
+    ) {
         if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
             actionHandler.onPermissionGranted()
         } else {
@@ -18,7 +22,11 @@ class PermissionUtils {
         }
     }
 
-    fun handleCameraPermissionsResult(context: Context, grantResults: IntArray, actionHandler: ActionHandler) {
+    fun handleCameraPermissionsResult(
+        context: Context,
+        grantResults: IntArray,
+        actionHandler: ActionHandler
+    ) {
         if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
             actionHandler.onPermissionGranted()
         } else {
