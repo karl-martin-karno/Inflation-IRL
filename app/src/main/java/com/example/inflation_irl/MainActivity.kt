@@ -76,10 +76,10 @@ class MainActivity : AppCompatActivity() {
         binding.productPriceEditText.setText("Loading...")
         when (Store.valueOf(binding.shopField.text.toString())) {
             Store.PRISMA -> prismaHandler.getProduct(barCode) { product ->
-                handleProductFound(product as Product)
+                handleProductFound(product)
             }
             Store.SELVER -> selverHandler.getProduct(barCode) { product ->
-                handleProductFound(product as Product)
+                handleProductFound(product)
             }
         }
     }

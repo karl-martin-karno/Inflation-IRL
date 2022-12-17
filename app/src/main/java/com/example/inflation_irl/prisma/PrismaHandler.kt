@@ -14,7 +14,7 @@ class PrismaHandler(mContext: Context) {
     private val prismaParser: PrismaParser = PrismaParser()
 
     fun interface ProductHandler {
-        fun onResponse(t: Any)
+        fun onResponse(product: Product)
     }
 
     fun getProduct(barCode: String, productHandler: ProductHandler) {

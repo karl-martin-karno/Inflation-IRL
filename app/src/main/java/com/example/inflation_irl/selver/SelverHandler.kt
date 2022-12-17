@@ -14,7 +14,7 @@ class SelverHandler(context: Context,) {
     private val selverParser: SelverParser = SelverParser()
 
     fun interface ProductHandler {
-        fun onResponse(t: Any)
+        fun onResponse(product: Product)
     }
 
     fun getProduct(barCode: String, productHandler: ProductHandler){
