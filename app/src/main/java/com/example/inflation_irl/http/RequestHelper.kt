@@ -25,7 +25,7 @@ class RequestHelper(
         }
     }
 
-    fun getProductPage(barCode: String, requestHandler: RequestHandler) {
+    fun getProductPageHtml(barCode: String, requestHandler: RequestHandler) {
         val url = combineWithBaseUrl(barCode)
         Ion.with(mContext)
             .load(url)

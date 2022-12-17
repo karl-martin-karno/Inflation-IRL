@@ -1,10 +1,12 @@
 package com.example.inflation_irl
 
 import android.Manifest
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.provider.MediaStore
+import android.util.Log
 import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
@@ -60,21 +62,30 @@ class MainActivity : AppCompatActivity() {
                             if (!isBarCodeFound) {
                                 handleBarCodeNotFound(result)
                             } else {
-                                val product: Product? =
-                                    when (Store.valueOf(binding.shopField.text.toString())) {
-                                        Store.PRISMA -> prismaHandler.getProduct(result)
-                                        Store.SELVER -> selverHandler.getProduct(result)
-                                    }
-                                // TODO: If product != null:
-                                // binding.productTitleEditText.setText(product.title)
-                                // Etc
-                                binding.productTitleEditText.setText(result)
+                                handleBarCodeFound(result)
                             }
                         }
                     }
                 }
             }
         }
+
+    @SuppressLint("SetTextI18n")
+    private fun handleBarCodeFound(barCode: String) {
+        binding.productTitleEditText.setText("Loading...")
+        binding.productPriceEditText.setText("Loading...")
+        when (Store.valueOf(binding.shopField.text.toString())) {
+            Store.PRISMA -> prismaHandler.getProduct(barCode) { product ->
+                handleProductFound(product as Product)
+            }
+            else -> Log.d("MainActivity", "Selver not implemented yet")
+        }
+    }
+
+    private fun handleProductFound(product: Product) {
+        binding.productTitleEditText.setText(product.name)
+        binding.productPriceEditText.setText(product.price.toString())
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
