@@ -5,7 +5,10 @@ import com.example.inflation_irl.Product
 import com.example.inflation_irl.Store
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.withContext
+import org.jsoup.Jsoup
 import java.sql.Date
+import java.text.SimpleDateFormat
+import java.util.*
 
 class SelverParser {
 
@@ -15,17 +18,27 @@ class SelverParser {
 
     suspend fun parseProductPageHtml(html: String, parserHandler: ParserHandler) {
         withContext(IO) {
-            Log.d("PrismaParser", "parse: $html")
-            // TODO: Add implementation
+            Log.d("SelverParser", "parse: $html")
+            val doc = Jsoup.parse(html)
+            val name: String = doc.getElementsByClass("page-title")[0].text()
+            val price: Double = doc.getElementsByClass("price")[1].text().split(" ")[0].replace(',', '.').toDouble()
+            val bar: String = doc.getElementsByClass("data")[0].text()
+
+            // Pilt ei ole salvestatud wayback machines aga link hangitud siiski
+            val thumb: String = doc.getElementsByAttributeValue("title", name).toString().split("\"")[1]
+
+            val formatter = SimpleDateFormat("yyyy-MM-dd")
+            val date = Calendar.getInstance().time
+            val current = formatter.format(date)
 
             val product = Product(
                 "0",
                 Store.SELVER,
-                "123456789",
-                "Coca-Cola",
-                1.35,
-                Date.valueOf("2020-01-01"),
-                "imgFilePath",
+                bar,
+                name,
+                price,
+                Date.valueOf(current),
+                thumb,
             )
 
             parserHandler.onParsed(product)
