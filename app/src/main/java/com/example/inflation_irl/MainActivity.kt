@@ -29,9 +29,9 @@ import java.util.*
 class MainActivity : AppCompatActivity() {
     // TODO: Use Dagger for dependency injection
     private lateinit var mapLocation: MapLocation
-    private var currentLocation: StoreEnum? = null
+    private var currentLocation: Store? = null
     private lateinit var binding: ActivityMainBinding
-    private val items = listOf(StoreEnum.PRISMA, StoreEnum.SELVER)
+    private val items = listOf(Store.PRISMA, Store.SELVER)
     private var imageFilePath: String? = null
     private val db = Firebase.firestore
     private val storage = Firebase.storage

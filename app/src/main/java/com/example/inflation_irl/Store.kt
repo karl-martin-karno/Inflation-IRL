@@ -1,5 +1,5 @@
 package com.example.inflation_irl
 
-enum class StoreEnum {
+enum class Store {
     SELVER, PRISMA
 }

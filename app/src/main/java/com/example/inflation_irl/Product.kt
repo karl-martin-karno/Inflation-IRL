@@ -4,7 +4,7 @@ import java.sql.Timestamp
 
 data class Product(
     var id: String?,
-    var store: StoreEnum,
+    var store: Store,
     var barCode: String?,
     var name: String?,
     var price: Double,

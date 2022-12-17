@@ -16,14 +16,14 @@ class MapLocation(private val applicationContext: Context) {
     val acceptedPlaces: Array<String> = arrayOf("selver", "prisma")
 
     @SuppressLint("MissingPermission")
-    suspend fun getLocation(): StoreEnum? {
+    suspend fun getLocation(): Store? {
         val match = withContext(IO) {
             Places.initialize(applicationContext, "AIzaSyAViygAFms699z-JFoWsDB9MzVTegVHfQ4")
             val placesClient = Places.createClient(applicationContext)
             val placeFields: List<Place.Field> = listOf(Place.Field.NAME)
             val request: FindCurrentPlaceRequest = FindCurrentPlaceRequest.newInstance(placeFields)
             val placeResponse = placesClient.findCurrentPlace(request)
-            var finalMatch: StoreEnum? = null
+            var finalMatch: Store? = null
             placeResponse.addOnCompleteListener { task ->
                 if (task.isSuccessful) {
                     val response = task.result
@@ -35,8 +35,8 @@ class MapLocation(private val applicationContext: Context) {
                             if (match.size > 0) {
                                 Log.i(TAG, place)
                                 when (match.get(0)) {
-                                    "selver" -> finalMatch = StoreEnum.SELVER
-                                    "prisma" -> finalMatch = StoreEnum.PRISMA
+                                    "selver" -> finalMatch = Store.SELVER
+                                    "prisma" -> finalMatch = Store.PRISMA
                                 }
                                 return@lit;
                             }
