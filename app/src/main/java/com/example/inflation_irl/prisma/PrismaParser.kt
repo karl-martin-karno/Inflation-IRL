@@ -6,6 +6,10 @@ import com.example.inflation_irl.Store
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.withContext
 import java.sql.Date
+import org.jsoup.Jsoup
+import java.text.SimpleDateFormat
+import java.util.*
+
 
 class PrismaParser {
 
@@ -16,17 +20,26 @@ class PrismaParser {
     suspend fun parseProductPageHtml(html: String, parserHandler: ParserHandler) {
         withContext(IO) {
             Log.d("PrismaParser", "parse: $html")
-            // TODO: Add implementation
+            val doc = Jsoup.parse(html)
+            val name = doc.getElementById("product-name")?.text().toString()
+            val price = ((doc.getElementsByClass("whole-number").text() + "."+ doc.getElementsByClass("decimal").text()).toString()).toDouble()
+            val bar = doc.getElementsByClass("aisle").text().toString().substringAfterLast(":").trim()
 
+            val formatter = SimpleDateFormat("yyyy-MM-dd")
+            val date = Calendar.getInstance().time
+            val current = formatter.format(date)
+
+            val thumb = doc.getElementById("product-image-zoom").toString().substringAfter("src=").
+            substringBefore("alt=").trim().replace("\"","")
 
             val product = Product(
                 "0",
                 Store.PRISMA,
-                "123456789",
-                "Coca-Cola",
-                1.35,
-                Date.valueOf("2020-01-01"),
-                "imgFilePath",
+                bar,
+                name,
+                price,
+                Date.valueOf(current),
+                thumb,
             )
 
             parserHandler.onParsed(product)
