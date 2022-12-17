@@ -4,10 +4,10 @@
         android:id="@+id/scan_barcode"
         android:enabled="true"
         android:icon="@drawable/icon_2"
-        android:title="@string/text_label_2" />
+        android:title="@string/bottom_nav_text_scan_barcode" />
     <item
         android:id="@+id/history"
         android:enabled="true"
         android:icon="@drawable/icon_1"
-        android:title="@string/text_label_1" />
+        android:title="@string/bottom_nav_text_history" />
 </menu>
