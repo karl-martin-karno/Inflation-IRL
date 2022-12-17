@@ -12,13 +12,12 @@ class PrismaHandler(mContext: Context) {
 
     private val requestHelper: RequestHelper = RequestHelper(mContext, Store.PRISMA)
     private val prismaParser: PrismaParser = PrismaParser()
-    private var product: Product? = null
 
     fun interface ProductHandler {
         fun onResponse(t: Any)
     }
 
-    fun getProduct(barCode: String, productHandler: ProductHandler): Product? {
+    fun getProduct(barCode: String, productHandler: ProductHandler) {
         CoroutineScope(IO).launch {
             requestHelper.getProductPageHtml(barCode) { htmlResponse ->
                 if (htmlResponse is String) {
@@ -30,6 +29,5 @@ class PrismaHandler(mContext: Context) {
                 }
             }
         }
-        return product
     }
 }
