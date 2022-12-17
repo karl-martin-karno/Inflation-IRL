@@ -60,10 +60,14 @@ class MainActivity : AppCompatActivity() {
                             if (!isBarCodeFound) {
                                 handleBarCodeNotFound(result)
                             } else {
-                                when (Store.valueOf(binding.shopField.text.toString())) {
-                                    Store.PRISMA -> prismaHandler.getProduct(result)
-                                    Store.SELVER -> selverHandler.getProduct(result)
-                                }
+                                val product: Product? =
+                                    when (Store.valueOf(binding.shopField.text.toString())) {
+                                        Store.PRISMA -> prismaHandler.getProduct(result)
+                                        Store.SELVER -> selverHandler.getProduct(result)
+                                    }
+                                // TODO: If product != null:
+                                // binding.productTitleEditText.setText(product.title)
+                                // Etc
                                 binding.productTitleEditText.setText(result)
                             }
                         }
