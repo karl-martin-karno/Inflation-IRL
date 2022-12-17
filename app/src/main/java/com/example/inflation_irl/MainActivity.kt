@@ -78,7 +78,9 @@ class MainActivity : AppCompatActivity() {
             Store.PRISMA -> prismaHandler.getProduct(barCode) { product ->
                 handleProductFound(product as Product)
             }
-            else -> Log.d("MainActivity", "Selver not implemented yet")
+            Store.SELVER -> selverHandler.getProduct(barCode) { product ->
+                handleProductFound(product as Product)
+            }
         }
     }
 

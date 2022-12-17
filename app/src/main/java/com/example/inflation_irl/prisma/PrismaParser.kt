@@ -23,8 +23,8 @@ class PrismaParser {
                 "0",
                 Store.PRISMA,
                 "123456789",
-                "Prisma",
-                0.35,
+                "Coca-Cola",
+                1.35,
                 Date.valueOf("2020-01-01"),
                 "imgFilePath",
             )
