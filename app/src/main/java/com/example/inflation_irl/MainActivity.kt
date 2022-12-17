@@ -1,15 +1,10 @@
 package com.example.inflation_irl
 
 import android.Manifest
-import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.graphics.Bitmap
-import android.graphics.BitmapFactory
 import android.os.Bundle
-import android.os.Environment
 import android.provider.MediaStore
-import android.util.Log
 import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
@@ -18,24 +13,19 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
 import com.example.inflation_irl.databinding.ActivityMainBinding
+import com.example.inflation_irl.image.ImageUtils
+import com.example.inflation_irl.scanner.BarCodeScanner
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
-import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.ktx.storage
-import com.google.mlkit.vision.barcode.BarcodeScanning
-import com.google.mlkit.vision.barcode.common.Barcode
-import com.google.mlkit.vision.common.InputImage
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Dispatchers.Main
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
-import java.io.File
-import java.io.FileInputStream
 import java.text.SimpleDateFormat
 import java.util.*
 
 class MainActivity : AppCompatActivity() {
+    // TODO: Use Dagger for dependency injection
     private lateinit var mapLocation: MapLocation
     private var currentLocation: StoreEnum? = null
     private lateinit var binding: ActivityMainBinding
@@ -43,6 +33,8 @@ class MainActivity : AppCompatActivity() {
     private var imageFilePath: String? = null
     private val db = Firebase.firestore
     private val storage = Firebase.storage
+    private val barCodeScanner: BarCodeScanner = BarCodeScanner()
+    private val imageUtils: ImageUtils = ImageUtils()
 
     companion object {
         const val MY_PERMISSIONS_REQUEST_LOCATION = 99
@@ -52,42 +44,26 @@ class MainActivity : AppCompatActivity() {
     private var resultLauncher =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
             if (result.resultCode == RESULT_OK) {
-                CoroutineScope(Dispatchers.IO).launch {
-                    // Result is empty, which is why we must get the picture via path
+                CoroutineScope(Main).launch {
                     imageFilePath?.let {
-                        val bmp = BitmapFactory.decodeFile(it)
-                        val ratio = bmp.width.toDouble() / bmp.height
-                        val scaledBmp =
-                            Bitmap.createScaledBitmap(bmp, (800 * ratio).toInt(), 800, false)
-                        withContext(Main) {
-                            binding.productLabelImageView.setImageBitmap(scaledBmp)
+                        val img = imageUtils.createScaledImage(it)
+                        binding.productLabelImageView.setImageBitmap(img)
+                        barCodeScanner.findBarcode(img) { result, isBarCodeFound ->
+                            if (!isBarCodeFound) {
+                                handleBarCodeNotFound(result)
+                            } else {
+                                binding.productTitleEditText.setText(result)
+                            }
                         }
-                        scanBarcode(bmp)
                     }
                 }
             }
         }
 
-
-    private fun scanBarcode(bitmap: Bitmap) {
-        val scanner = BarcodeScanning.getClient()
-        val image = InputImage.fromBitmap(bitmap, 0)
-        val result = scanner.process(image)
-            .addOnSuccessListener { barcodes ->
-                for (barcode in barcodes) {
-                    val bounds = barcode.boundingBox
-                    val corners = barcode.cornerPoints
-
-                    val rawValue = barcode.rawValue // barcode value
-
-                    val valueType = barcode.valueType
-                }
-            }
-            .addOnFailureListener {
-            }
-            .addOnCompleteListener {
-                scanner.close()
-            }
+    private fun handleBarCodeNotFound(result: String) {
+        Toast.makeText(applicationContext, result, Toast.LENGTH_LONG).show()
+        binding.productTitleEditText.setText("")
+        binding.productPriceEditText.setText("")
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -124,7 +100,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun handleImageCaptureIntent() {
         val timestamp = SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(Date())
-        val photoFile = getPhotoFile(this, "$timestamp.png")
+        val photoFile = imageUtils.getPhotoFile(this, "$timestamp.png")
         val fileUri =
             FileProvider.getUriForFile(this, "com.example.inflation_irl.fileprovider", photoFile)
         val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
@@ -133,20 +109,6 @@ class MainActivity : AppCompatActivity() {
         // https://stackoverflow.com/questions/1910608/android-action-image-capture-intent
         imageFilePath = photoFile.toString()
         resultLauncher.launch(intent)
-    }
-
-    /**
-     * Returns the File for a photo stored on disk given the fileName.
-     * Creating the storage directory if it does not exist
-     */
-    private fun getPhotoFile(context: Context, fileName: String): File {
-        // Get safe storage directory for photos. Use `getExternalFilesDir` on Context to access package-specific directories.
-        // This way, we don't need to request external read/write runtime permissions.
-        val mediaStorageDir: File = context.getExternalFilesDir(Environment.DIRECTORY_PICTURES)!!
-        if (!mediaStorageDir.exists() && !mediaStorageDir.mkdirs()) {
-            Log.d("NewRecipeActivity", "failed to create directory")
-        }
-        return File(mediaStorageDir.path + File.separator + fileName)
     }
 
     private fun checkPermission(permission: String, requestCode: Int) {
@@ -197,6 +159,4 @@ class MainActivity : AppCompatActivity() {
             ).show()
         }
     }
-
-
 }

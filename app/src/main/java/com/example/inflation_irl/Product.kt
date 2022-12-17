@@ -9,7 +9,7 @@ data class Product(
     var name: String?,
     var price: Double,
     var date: Timestamp,
-    var imagePath: String,
+    var imageFilePath: String,
 ) {
     companion object {
         const val DATEFORMAT = "dd/MM/yyyy"
