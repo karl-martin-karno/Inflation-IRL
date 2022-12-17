@@ -1,6 +1,6 @@
 package com.example.inflation_irl
 
-import java.sql.Timestamp
+import java.sql.Date
 
 data class Product(
     var id: String?,
@@ -8,7 +8,7 @@ data class Product(
     var barCode: String?,
     var name: String?,
     var price: Double,
-    var date: Timestamp,
+    var date: Date,
     var imageFilePath: String,
 ) {
     companion object {

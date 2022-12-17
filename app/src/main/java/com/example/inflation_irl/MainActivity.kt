@@ -16,7 +16,9 @@ import com.example.inflation_irl.databinding.ActivityMainBinding
 import com.example.inflation_irl.image.ImageUtils
 import com.example.inflation_irl.location.LocationUtils
 import com.example.inflation_irl.permission.PermissionUtils
+import com.example.inflation_irl.prisma.PrismaHandler
 import com.example.inflation_irl.scanner.BarCodeScanner
+import com.example.inflation_irl.selver.SelverHandler
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.ktx.storage
@@ -39,6 +41,8 @@ class MainActivity : AppCompatActivity() {
     private val imageUtils: ImageUtils = ImageUtils()
     private val permissionUtils: PermissionUtils = PermissionUtils()
     private val locationUtils: LocationUtils = LocationUtils()
+    private val prismaHandler: PrismaHandler = PrismaHandler(this)
+    private val selverHandler: SelverHandler = SelverHandler(this)
 
     companion object {
         const val MY_PERMISSIONS_REQUEST_LOCATION = 99
@@ -56,6 +60,10 @@ class MainActivity : AppCompatActivity() {
                             if (!isBarCodeFound) {
                                 handleBarCodeNotFound(result)
                             } else {
+                                when (Store.valueOf(binding.shopField.text.toString())) {
+                                    Store.PRISMA -> prismaHandler.getProduct(result)
+                                    Store.SELVER -> selverHandler.getProduct(result)
+                                }
                                 binding.productTitleEditText.setText(result)
                             }
                         }
