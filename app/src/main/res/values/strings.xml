@@ -13,6 +13,8 @@
     <!-- Scan barcode view-->
     <string name="selected_shop">Selected shop</string>
     <string name="scan_barcode">Scan barcode</string>
+    <string name="history_list_store_icon_description_tooltip">Store icon</string>
+    <string name="history_list_item_icon_description_tooltip">Item icon</string>
 
     <!-- History view-->
 
