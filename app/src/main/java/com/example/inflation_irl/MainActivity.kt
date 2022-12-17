@@ -14,6 +14,8 @@ import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
 import com.example.inflation_irl.databinding.ActivityMainBinding
 import com.example.inflation_irl.image.ImageUtils
+import com.example.inflation_irl.location.LocationUtils
+import com.example.inflation_irl.permission.PermissionUtils
 import com.example.inflation_irl.scanner.BarCodeScanner
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
@@ -35,6 +37,8 @@ class MainActivity : AppCompatActivity() {
     private val storage = Firebase.storage
     private val barCodeScanner: BarCodeScanner = BarCodeScanner()
     private val imageUtils: ImageUtils = ImageUtils()
+    private val permissionUtils: PermissionUtils = PermissionUtils()
+    private val locationUtils: LocationUtils = LocationUtils()
 
     companion object {
         const val MY_PERMISSIONS_REQUEST_LOCATION = 99
@@ -59,12 +63,6 @@ class MainActivity : AppCompatActivity() {
                 }
             }
         }
-
-    private fun handleBarCodeNotFound(result: String) {
-        Toast.makeText(applicationContext, result, Toast.LENGTH_LONG).show()
-        binding.productTitleEditText.setText("")
-        binding.productPriceEditText.setText("")
-    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -98,6 +96,46 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    private fun checkPermission(permission: String, requestCode: Int) {
+        if (ContextCompat.checkSelfPermission(
+                this,
+                permission
+            ) == PackageManager.PERMISSION_DENIED
+        ) {
+            ActivityCompat.requestPermissions(this, arrayOf(permission), requestCode)
+        } else {
+            if (permission == Manifest.permission.ACCESS_FINE_LOCATION || permission == Manifest.permission.ACCESS_COARSE_LOCATION) {
+                handleFindNearestStore()
+            }
+        }
+    }
+
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<String>,
+        grantResults: IntArray
+    ) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        when (requestCode) {
+            MY_PERMISSIONS_REQUEST_LOCATION -> permissionUtils.handleLocationPermissionsResult(
+                this, grantResults
+            ) { handleFindNearestStore() }
+            CAMERA_PERMISSION_CODE -> permissionUtils.handleCameraPermissionsResult(
+                this,
+                grantResults
+            ) { handleImageCaptureIntent() }
+        }
+    }
+
+    private fun handleFindNearestStore() {
+        CoroutineScope(Main).launch {
+            val store = locationUtils.findNearestStore()
+            store?.let {
+                binding.shopField.setText(store.name, false)
+            }
+        }
+    }
+
     private fun handleImageCaptureIntent() {
         val timestamp = SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(Date())
         val photoFile = imageUtils.getPhotoFile(this, "$timestamp.png")
@@ -111,52 +149,9 @@ class MainActivity : AppCompatActivity() {
         resultLauncher.launch(intent)
     }
 
-    private fun checkPermission(permission: String, requestCode: Int) {
-        if (ContextCompat.checkSelfPermission(
-                this,
-                permission
-            ) == PackageManager.PERMISSION_DENIED
-        ) {
-            ActivityCompat.requestPermissions(this, arrayOf(permission), requestCode)
-        } else {
-            Toast.makeText(applicationContext, "Permission already granted", Toast.LENGTH_SHORT)
-                .show()
-        }
-    }
-
-    override fun onRequestPermissionsResult(
-        requestCode: Int,
-        permissions: Array<String>,
-        grantResults: IntArray
-    ) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        when (requestCode) {
-            MY_PERMISSIONS_REQUEST_LOCATION -> handleLocationPermissionsResult(grantResults)
-            CAMERA_PERMISSION_CODE -> handleCameraPermissionsResult(grantResults)
-        }
-    }
-
-    private fun handleLocationPermissionsResult(grantResults: IntArray) {
-        if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-            Toast.makeText(
-                applicationContext,
-                "Location Permission Granted",
-                Toast.LENGTH_SHORT
-            ).show()
-        } else {
-            Toast.makeText(this, "Location Permission Denied", Toast.LENGTH_SHORT).show()
-        }
-    }
-
-    private fun handleCameraPermissionsResult(grantResults: IntArray) {
-        if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-            handleImageCaptureIntent()
-        } else {
-            Toast.makeText(
-                this,
-                "Camera permission is required to use camera.",
-                Toast.LENGTH_SHORT
-            ).show()
-        }
+    private fun handleBarCodeNotFound(result: String) {
+        Toast.makeText(applicationContext, result, Toast.LENGTH_LONG).show()
+        binding.productTitleEditText.setText("")
+        binding.productPriceEditText.setText("")
     }
 }
