@@ -3,7 +3,18 @@
     <string name="product_title">Product title</string>
     <string name="product_price">Product price</string>
     <string name="add_picture_of_label">Add picture of label</string>
-    <string name="selected_shop">Selected shop</string>
     <string name="search_price_history">Search price history</string>
     <string name="picture_of_the_product_label">Picture of the product label</string>
+
+    <!-- Scan barcode view-->
+    <string name="bottom_nav_text_scan_barcode">Scan Barcode</string>
+    <string name="bottom_nav_text_history">History</string>
+
+    <!-- Scan barcode view-->
+    <string name="selected_shop">Selected shop</string>
+    <string name="scan_barcode">Scan barcode</string>
+
+    <!-- History view-->
+
+    <!-- Product info view-->
 </resources>
