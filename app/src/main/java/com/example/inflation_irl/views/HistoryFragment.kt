@@ -25,7 +25,7 @@ class HistoryFragment : Fragment() {
 
         val dataset = getDummyData()
         val recyclerView = view.findViewById<RecyclerView>(R.id.history_recyclerview)
-        recyclerView.adapter = context?.let { HistoryListAdapter(it.applicationContext, dataset) }
+        recyclerView.adapter = HistoryListAdapter(dataset)
 
         // TODO navigate to product info on item click
 //        view.findViewById<Button>(R.id.bout_btn).setOnClickListener {
@@ -65,7 +65,6 @@ class HistoryFragment : Fragment() {
                 store = R.drawable.rimi
             )
         )
-
         return dataset
     }
 }

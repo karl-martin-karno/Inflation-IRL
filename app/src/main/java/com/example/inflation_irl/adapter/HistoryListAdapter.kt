@@ -1,6 +1,5 @@
 package com.example.inflation_irl.adapter
 
-import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,7 +9,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.inflation_irl.R
 
 
-class HistoryListAdapter(private val context: Context, private val dataset: MutableList<HistoryListItem>) :
+class HistoryListAdapter(private val dataset: MutableList<HistoryListItem>) :
     RecyclerView.Adapter<HistoryListAdapter.ItemViewHolder>() {
     class ItemViewHolder(private val view: View) : RecyclerView.ViewHolder(view) {
         val textView: TextView = view.findViewById(R.id.history_list_item_name)
