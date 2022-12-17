@@ -12,7 +12,7 @@ class PrismaHandler(mContext: Context) {
     fun getProduct(barCode: String) {
         requestHelper.getProductPage(barCode) { response ->
             if (response is String) {
-                prismaParser.parse(response)
+                prismaParser.parseProductPage(response)
             }
         }
     }

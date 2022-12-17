@@ -4,7 +4,7 @@ import android.util.Log
 
 class PrismaParser {
 
-    fun parse(html: String) {
+    fun parseProductPage(html: String) {
         Log.d("PrismaParser", "parse: $html")
         // TODO: Add implementation
     }

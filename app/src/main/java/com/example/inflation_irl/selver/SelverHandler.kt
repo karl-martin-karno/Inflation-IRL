@@ -12,7 +12,7 @@ class SelverHandler(context: Context,) {
     fun getProduct(barCode: String) {
         requestHelper.getProductPage(barCode) { response ->
             if (response is String) {
-                selverParser.parse(response)
+                selverParser.parseProductPage(response)
             }
         }
     }

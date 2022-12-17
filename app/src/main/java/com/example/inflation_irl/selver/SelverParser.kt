@@ -4,7 +4,7 @@ import android.util.Log
 
 class SelverParser {
 
-    fun parse(html: String) {
+    fun parseProductPage(html: String) {
         Log.d("SelverParser", "parse: $html")
         // TODO: Add implementation
     }
