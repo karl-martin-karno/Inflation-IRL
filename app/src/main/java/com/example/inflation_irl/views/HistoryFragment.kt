@@ -20,47 +20,41 @@ class HistoryFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.fragment_history, container, false)
 
         val dataset = getDummyData()
         val recyclerView = view.findViewById<RecyclerView>(R.id.history_recyclerview)
         recyclerView.adapter = HistoryListAdapter(dataset)
-
-        // TODO navigate to product info on item click
-//        view.findViewById<Button>(R.id.bout_btn).setOnClickListener {
-//            findNavController().navigate(R.id.action_title_to_about)
-//        }
         return view
     }
 
-
+    // TODO replace with query
     private fun getDummyData(): MutableList<HistoryListItem> {
         val dataset = mutableListOf<HistoryListItem>()
         dataset.add(
             HistoryListItem(
-                name = "Doritos Nacho Cheese Flavored Tortilla Chips",
+                title = "Doritos Nacho Cheese Flavored Tortilla Chips",
                 icon = R.drawable.doritos,
                 store = R.drawable.prisma
             )
         )
         dataset.add(
             HistoryListItem(
-                name = "Monster Energy Zero Sugar Energy Drink",
+                title = "Monster Energy Zero Sugar Energy Drink",
                 icon = R.drawable.monster_energy_drink,
                 store = R.drawable.prisma
             )
         )
         dataset.add(
             HistoryListItem(
-                name = "DiGiorno Traditional Crust Pepperoni Frozen Pizza",
+                title = "DiGiorno Traditional Crust Pepperoni Frozen Pizza",
                 icon = R.drawable.pizza,
                 store = R.drawable.rimi
             )
         )
         dataset.add(
             HistoryListItem(
-                name = "Red Bull Energy Drink 4x 0.25L",
+                title = "Red Bull Energy Drink 4x 0.25L",
                 icon = R.drawable.red_bull,
                 store = R.drawable.rimi
             )
