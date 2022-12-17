@@ -137,16 +137,22 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun handleImageCaptureIntent() {
-        val timestamp = SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(Date())
-        val photoFile = imageUtils.getPhotoFile(this, "$timestamp.png")
-        val fileUri =
-            FileProvider.getUriForFile(this, "com.example.inflation_irl.fileprovider", photoFile)
-        val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
-        intent.putExtra(MediaStore.EXTRA_OUTPUT, fileUri)
+        CoroutineScope(Main).launch {
+            val timestamp = SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(Date())
+            val photoFile = imageUtils.getPhotoFile(applicationContext, "$timestamp.png")
+            val fileUri =
+                FileProvider.getUriForFile(
+                    applicationContext,
+                    "com.example.inflation_irl.fileprovider",
+                    photoFile
+                )
+            val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
+            intent.putExtra(MediaStore.EXTRA_OUTPUT, fileUri)
 
-        // https://stackoverflow.com/questions/1910608/android-action-image-capture-intent
-        imageFilePath = photoFile.toString()
-        resultLauncher.launch(intent)
+            // https://stackoverflow.com/questions/1910608/android-action-image-capture-intent
+            imageFilePath = photoFile.toString()
+            resultLauncher.launch(intent)
+        }
     }
 
     private fun handleBarCodeNotFound(result: String) {
