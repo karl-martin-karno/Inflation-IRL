@@ -80,6 +80,7 @@ class ScanBarcodeFragment : Fragment() {
         binding.findPriceHistoryButton.isEnabled = false
         binding.shopField.setText(items[0].name, false)
 
+        checkPermission(Manifest.permission.ACCESS_FINE_LOCATION, MY_PERMISSIONS_REQUEST_LOCATION)
         setupAddPictureButton()
         return view
     }
@@ -115,11 +116,7 @@ class ScanBarcodeFragment : Fragment() {
             ) {
                 handleImageCaptureIntent()
             } else {
-                ActivityCompat.requestPermissions(
-                    requireContext() as Activity,
-                    arrayOf(Manifest.permission.CAMERA),
-                    CAMERA_PERMISSION_CODE
-                )
+                checkPermission(Manifest.permission.CAMERA, CAMERA_PERMISSION_CODE)
             }
         }
     }
@@ -127,7 +124,8 @@ class ScanBarcodeFragment : Fragment() {
     private fun handleBarCodeFound(barCode: String) {
         // TODO: Why does this not work
         if (binding.shopField.text == null) {
-            Toast.makeText(requireContext(), "Please select your shop first", Toast.LENGTH_SHORT).show()
+            Toast.makeText(requireContext(), "Please select your shop first", Toast.LENGTH_SHORT)
+                .show()
             return
         }
 
@@ -156,12 +154,10 @@ class ScanBarcodeFragment : Fragment() {
                 permission
             ) == PackageManager.PERMISSION_DENIED
         ) {
-            // TODO: Request permission
             requestPermissions(arrayOf(permission), requestCode)
         } else {
             if (permission == Manifest.permission.ACCESS_FINE_LOCATION || permission == Manifest.permission.ACCESS_COARSE_LOCATION) {
-                // handleFindNearestStore()
-                // TODO
+                handleFindNearestStore()
             }
         }
     }
@@ -188,6 +184,23 @@ class ScanBarcodeFragment : Fragment() {
             // https://stackoverflow.com/questions/1910608/android-action-image-capture-intent
             imageFilePath = photoFile.toString()
             resultLauncher.launch(intent)
+        }
+    }
+
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<String>,
+        grantResults: IntArray
+    ) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        when (requestCode) {
+            MY_PERMISSIONS_REQUEST_LOCATION -> permissionUtils.handleLocationPermissionsResult(
+                requireContext(), grantResults
+            ) { handleFindNearestStore() }
+            CAMERA_PERMISSION_CODE -> permissionUtils.handleCameraPermissionsResult(
+                requireContext(),
+                grantResults
+            ) { handleImageCaptureIntent() }
         }
     }
 
