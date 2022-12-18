@@ -2,6 +2,8 @@
 
 This is an Android app made as a part of Mobile Application Development course. The app is written in Kotlin and built using Gradle.
 
+An app that tracks inflation and food prices can provide useful information for individuals, businesses, and policymakers by allowing them to monitor changes in the cost of living and the prices of specific food items. This can help people make informed decisions about their budgets and consumption patterns, and it can also provide insights into economic trends and conditions.
+
 # Prerequisites
 
 In order to build and run this app, you will need to have the following software installed on your development machine:
