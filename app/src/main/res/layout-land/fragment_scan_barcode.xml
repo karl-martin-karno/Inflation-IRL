@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ImageView
+        android:id="@+id/selected_store_icon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="360dp"
+        android:layout_marginTop="68dp"
+        android:src="@drawable/default_store_icon"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <EditText
+        android:id="@+id/productBarCodeEditText"
+        android:layout_width="271dp"
+        android:layout_height="54dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="32dp"
+        android:layout_marginBottom="24dp"
+        android:autofillHints="productTitle"
+        android:ems="10"
+        android:hint="@string/product_bar_code"
+        android:inputType="number"
+        android:minHeight="48dp"
+        app:layout_constraintBottom_toTopOf="@+id/scan_barcode_button"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.403"
+        app:layout_constraintStart_toEndOf="@+id/productLabelImageView"
+        />
+
+    <Button
+        android:id="@+id/scan_barcode_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginBottom="72dp"
+        android:paddingLeft="24dp"
+        android:paddingRight="24dp"
+        android:text="@string/scan_barcode"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/find_price_history_button"
+        app:layout_constraintHorizontal_bias="0.97"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <Button
+        android:id="@+id/find_price_history_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="32dp"
+        android:layout_marginBottom="72dp"
+        android:paddingLeft="24dp"
+        android:paddingRight="24dp"
+        android:text="@string/search_prices"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/scan_barcode_button" />
+
+    <ImageView
+        android:id="@+id/productLabelImageView"
+        android:layout_width="291dp"
+        android:layout_height="270dp"
+        android:layout_marginStart="28dp"
+        android:layout_marginTop="68dp"
+        android:contentDescription="@string/picture_of_the_product_label"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/scan_barcode" />
+</androidx.constraintlayout.widget.ConstraintLayout>
