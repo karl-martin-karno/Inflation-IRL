@@ -5,6 +5,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.example.inflation_irl.Product
 import com.example.inflation_irl.R
@@ -13,6 +14,9 @@ import com.example.inflation_irl.dao.FireStoreDao
 import com.example.inflation_irl.databinding.FragmentProductInfoBinding
 import com.example.inflation_irl.prisma.PrismaHandler
 import com.example.inflation_irl.selver.SelverHandler
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers.IO
+import kotlinx.coroutines.launch
 
 
 /**
@@ -47,12 +51,14 @@ class ProductInfoFragment : Fragment() {
 
 
         val selectedStore = Store.PRISMA
-        val barCode = "4750042304845"
+        val barCode = "4743050000045"
         handleBarCodeFound(barCode, selectedStore)
         return view
     }
 
     private fun handleBarCodeFound(barCode: String, selectedStore: Store) {
+        binding.productPriceEditText.setText(getString(R.string.loading_text))
+        binding.productTitleEditText.setText(getString(R.string.loading_text))
         when (selectedStore) {
             Store.PRISMA -> prismaHandler.getProduct(barCode) { product ->
                 handleProductFound(product)
@@ -67,12 +73,18 @@ class ProductInfoFragment : Fragment() {
         binding.productPriceEditText.setText(product.price.toString())
         binding.productTitleEditText.setText(product.name)
         Log.d("ProductInfoFragment", "handleProductFound: $product")
-        fireBaseDao.addProduct(product)
-
-        fireBaseDao.getProducts { products ->
-            products.forEach {
-                Log.d("ProductInfoFragment", "handleProductFound: ${it}")
+        CoroutineScope(IO).launch {
+            fireBaseDao.getProducts { products ->
+                if (products.isEmpty()) {
+                    Toast.makeText(requireContext(), "No products found", Toast.LENGTH_SHORT).show()
+                } else {
+                    products.forEach {
+                        Log.d("ProductInfoFragment", "handleProductFound: ${it}")
+                    }
+                }
             }
+            fireBaseDao.addProduct(product)
         }
+
     }
 }

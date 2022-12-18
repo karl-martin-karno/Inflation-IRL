@@ -117,7 +117,7 @@ class ScanBarcodeFragment : Fragment() {
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
             if (result.resultCode == RESULT_OK) {
                 CoroutineScope(Main).launch {
-                    binding.productBarCodeEditText.setText("Loading...")
+                    binding.productBarCodeEditText.setText(getString(R.string.loading_text))
                     imageFilePath?.let {
                         val img = imageUtils.createScaledImage(it)
                         val imageView = binding.productLabelImageView
