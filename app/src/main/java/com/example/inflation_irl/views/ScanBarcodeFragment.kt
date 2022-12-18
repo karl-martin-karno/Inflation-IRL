@@ -24,6 +24,7 @@ import androidx.navigation.Navigation.findNavController
 import com.example.inflation_irl.R
 import com.example.inflation_irl.Store
 import com.example.inflation_irl.databinding.FragmentScanBarcodeBinding
+import com.example.inflation_irl.http.RequestHelper
 import com.example.inflation_irl.location.LocationUtils
 import com.example.inflation_irl.permission.PermissionUtils
 import com.example.inflation_irl.scanner.BarCodeScanner
@@ -49,6 +50,8 @@ class ScanBarcodeFragment : Fragment() {
         com.example.inflation_irl.image.ImageUtils()
     private val permissionUtils: PermissionUtils = PermissionUtils()
     private val locationUtils: LocationUtils = LocationUtils()
+    private val prompt = GridLayoutDialogFragment(::selectStore)
+    private lateinit var selectedStore: Store
 
     companion object {
         const val MY_PERMISSIONS_REQUEST_LOCATION = 99
@@ -62,10 +65,6 @@ class ScanBarcodeFragment : Fragment() {
         _binding = FragmentScanBarcodeBinding.inflate(inflater, container, false)
         val view = binding.root
 
-        val adapter = ArrayAdapter(requireContext(), R.layout.shop_list_item, items)
-        binding.shopField.setAdapter(adapter)
-        binding.shopField.setText(items[0].name, false)
-
         // Enable the button if the EditText is not empty
         handleBarcodeEdit()
         binding.findPriceHistoryButton.setOnClickListener { handleQueryProductInfo(view) }
@@ -73,11 +72,29 @@ class ScanBarcodeFragment : Fragment() {
         checkPermission(Manifest.permission.ACCESS_FINE_LOCATION, MY_PERMISSIONS_REQUEST_LOCATION)
         setupAddPictureButton()
 
-//        if (!promptClosed) { // promp to select a store
-//            GridLayoutDialogFragment().show(parentFragmentManager, "grid_layout_dialog")
-//            // click listener for images
-//        }
+        if (!this::selectedStore.isInitialized) {
+            showStoreSelectionPrompt()
+        }
+        binding.selectedStoreIcon.setOnClickListener { showStoreSelectionPrompt() }
+
         return view
+    }
+
+    private fun showStoreSelectionPrompt() {
+        prompt.show(parentFragmentManager, "grid_layout_dialog")
+    }
+
+    private fun selectStore(store: Store) {
+        selectedStore = store
+        binding.selectedStoreIcon.setImageResource(
+            when (store) {
+                Store.PRISMA -> R.drawable.prisma
+                Store.SELVER -> R.drawable.selver
+                Store.MAXIMA -> R.drawable.maxima
+                Store.KAUBAMAJA -> R.drawable.kaubamaja
+            }
+        )
+        prompt.dismiss()
     }
 
     private fun handleBarcodeEdit() {
@@ -95,12 +112,6 @@ class ScanBarcodeFragment : Fragment() {
 
 
     private fun handleQueryProductInfo(view: ConstraintLayout) {
-        if (binding.shopField.text == null) {
-            Toast.makeText(requireContext(), "Please select your shop first", Toast.LENGTH_SHORT)
-                .show()
-            return
-        }
-
         val barCodeLength = binding.productBarCodeEditText.text.length
         if (barCodeLength < 12 || barCodeLength > 14) {
             Toast.makeText(
@@ -111,22 +122,19 @@ class ScanBarcodeFragment : Fragment() {
             return
         }
 
-        // FIXME: This does not work
-        if (binding.shopField.text.equals("SELVER")) {
+        if (selectedStore == Store.PRISMA) {
             val bundle = bundleOf(
-                "icon" to R.drawable.red_bull,
-                "store" to R.drawable.selver,
-                "title" to "some description goes here"
+                "store" to Store.PRISMA.name,
+                "barcode" to "4743050000045"
             )
             findNavController(view).navigate(R.id.productInfoFragment2, bundle)
         } else {
-            val bundle = bundleOf(
-                "icon" to R.drawable.red_bull,
-                "store" to R.drawable.prisma,
-                "title" to "some description goes here"
+            Toast.makeText(
+                requireContext(),
+                "Only Prisma is currently supported",
+                Toast.LENGTH_SHORT
             )
-            findNavController(view).navigate(R.id.productInfoFragment2, bundle)
-
+                .show()
         }
     }
 
@@ -183,10 +191,9 @@ class ScanBarcodeFragment : Fragment() {
         CoroutineScope(Main).launch {
             // TODO:
             val store = getActivity()?.let { locationUtils.findNearestStore(it.applicationContext) }
-            if (store == null) {
-                binding.shopField.setText("PRISMA", false)
-            } else {
-                binding.shopField.setText(store.toString(), false)
+            if (store != null) {
+                selectedStore = store
+                prompt.dismiss()
             }
         }
     }
