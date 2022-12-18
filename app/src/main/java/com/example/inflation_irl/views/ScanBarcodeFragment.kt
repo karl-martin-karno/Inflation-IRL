@@ -71,7 +71,8 @@ class ScanBarcodeFragment : Fragment() {
         binding.shopField.setAdapter(adapter)
         binding.shopField.setText(items[0].name, false)
 
-        binding.scanBarcodeButton.setOnClickListener { Toast.makeText(requireContext(), "Scan Barcode clicked", Toast.LENGTH_SHORT).show(); }
+        // Enable the button if the EditText is not empty
+        handleBarcodeEdit()
         binding.findPriceHistoryButton.setOnClickListener { handleQueryProductInfo(view) }
 
         checkPermission(Manifest.permission.ACCESS_FINE_LOCATION, MY_PERMISSIONS_REQUEST_LOCATION)
