@@ -24,7 +24,7 @@ class GridLayoutDialogFragment(val selectStore: (store: Store) -> Unit) : Dialog
         val view = inflater.inflate(R.layout.select_store_prompt, container, false)
         view.findViewById<ImageView>(R.id.select_store_prisma)
             .setOnClickListener { selectStore(Store.PRISMA) }
-        view.findViewById<ImageView>(R.id.select_store_rimi)
+        view.findViewById<ImageView>(R.id.select_store_kaubamaja)
             .setOnClickListener { selectStore(Store.KAUBAMAJA) }
         view.findViewById<ImageView>(R.id.select_store_maxima)
             .setOnClickListener { selectStore(Store.MAXIMA) }
