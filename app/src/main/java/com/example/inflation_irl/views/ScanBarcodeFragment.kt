@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.Toast
 import com.example.inflation_irl.R
+import com.example.inflation_irl.databinding.FragmentScanBarcodeBinding
 
 
 /**
@@ -16,20 +17,19 @@ import com.example.inflation_irl.R
  * create an instance of this fragment.
  */
 class ScanBarcodeFragment : Fragment() {
-
-    private lateinit var binding: ScanBarcodeFragment
+    private var _binding: FragmentScanBarcodeBinding? = null
+    private val binding get() = _binding!!
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
-        val view = inflater.inflate(R.layout.fragment_scan_barcode, container, false)
+        _binding = FragmentScanBarcodeBinding.inflate(inflater, container, false)
+        val view = binding.root
 
-        view.findViewById<Button>(R.id.scan_barcode_button).setOnClickListener{
+        binding.scanBarcodeButton.setOnClickListener{
             Toast.makeText(requireContext(),"Scan Barcode clicked",Toast.LENGTH_SHORT).show();
         }
         return view
     }
-
 }
