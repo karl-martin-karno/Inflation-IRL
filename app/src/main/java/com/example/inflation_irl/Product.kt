@@ -1,6 +1,6 @@
 package com.example.inflation_irl
 
-import java.sql.Date
+import com.google.firebase.Timestamp
 
 data class Product(
     var id: String?,
@@ -8,10 +8,6 @@ data class Product(
     var barCode: String?,
     var name: String?,
     var price: Double,
-    var date: Date,
+    var date: Timestamp,
     var imageFilePath: String,
-) {
-    companion object {
-        const val DATEFORMAT = "dd/MM/yyyy"
-    }
-}
+)

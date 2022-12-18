@@ -3,10 +3,10 @@ package com.example.inflation_irl.selver
 import android.util.Log
 import com.example.inflation_irl.Product
 import com.example.inflation_irl.Store
+import com.google.firebase.Timestamp
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.withContext
 import org.jsoup.Jsoup
-import java.sql.Date
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -37,7 +37,7 @@ class SelverParser {
                 bar,
                 name,
                 price,
-                Date.valueOf(current),
+                Timestamp.now(),
                 thumb,
             )
 
