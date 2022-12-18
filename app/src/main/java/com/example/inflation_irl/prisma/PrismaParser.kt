@@ -14,26 +14,43 @@ class PrismaParser {
         fun onParsed(product: Product)
     }
 
-    suspend fun parseProductPageHtml(html: String, parserHandler: ParserHandler) {
+    suspend fun parseProductPageHtml(html: String, barCode: String, parserHandler: ParserHandler) {
         withContext(IO) {
-            val doc = Jsoup.parse(html)
-            val name = doc.getElementById("product-name")?.text().toString()
-            val price = ((doc.getElementsByClass("whole-number").text() + "."+ doc.getElementsByClass("decimal").text()).toString()).toDouble()
-            val bar = doc.getElementsByClass("aisle").text().toString().substringAfterLast(":").trim()
-            val thumb = doc.getElementById("product-image-zoom").toString().substringAfter("src=").
-            substringBefore("alt=").trim().replace("\"","")
+            try {
+                val doc = Jsoup.parse(html)
+                val name = doc.getElementById("product-name")?.text().toString()
+                val priceText = (doc.getElementsByClass("whole-number")
+                    .text() + "." + doc.getElementsByClass("decimal").text());
+                var price = 0.0
+                if (priceText != ".") {
+                    price = priceText.toDouble()
+                }
+                val thumb =
+                    doc.getElementById("product-image-zoom").toString().substringAfter("src=")
+                        .substringBefore("alt=").trim().replace("\"", "")
+                val product = Product(
+                    "0",
+                    Store.PRISMA,
+                    barCode,
+                    name,
+                    price,
+                    Timestamp.now(),
+                    thumb,
+                )
+                parserHandler.onParsed(product)
+            } catch (e: Exception) {
+                val product = Product(
+                    "0",
+                    Store.PRISMA,
+                    barCode,
+                    "Error when searching for product",
+                    0.0,
+                    Timestamp.now(),
+                    "",
+                )
+                parserHandler.onParsed(product)
+            }
 
-            val product = Product(
-                "0",
-                Store.PRISMA,
-                bar,
-                name,
-                price,
-                Timestamp.now(),
-                thumb,
-            )
-
-            parserHandler.onParsed(product)
         }
     }
 }

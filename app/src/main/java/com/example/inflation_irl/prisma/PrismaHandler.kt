@@ -22,7 +22,7 @@ class PrismaHandler(mContext: Context) {
             requestHelper.getProductPageHtmlByBarCode(barCode) { htmlResponse ->
                 if (htmlResponse is String) {
                     CoroutineScope(IO).launch {
-                        prismaParser.parseProductPageHtml(htmlResponse) { product ->
+                        prismaParser.parseProductPageHtml(htmlResponse, barCode) { product ->
                             productHandler.onResponse(product)
                         }
                     }

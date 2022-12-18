@@ -22,7 +22,7 @@ class SelverHandler(context: Context) {
             requestHelper.getProductPageHtmlByBarCode(barCode) { htmlResponse ->
                 if (htmlResponse is String) {
                     CoroutineScope(Dispatchers.IO).launch {
-                        selverParser.parseProductPageHtml(htmlResponse) { product ->
+                        selverParser.parseProductPageHtml(htmlResponse, barCode) { product ->
                             productHandler.onResponse(product)
                         }
                     }
