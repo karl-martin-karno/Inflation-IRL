@@ -9,7 +9,6 @@ import android.os.Bundle
 import android.provider.MediaStore
 import android.text.Editable
 import android.text.TextWatcher
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -28,9 +27,6 @@ import com.example.inflation_irl.databinding.FragmentScanBarcodeBinding
 import com.example.inflation_irl.location.LocationUtils
 import com.example.inflation_irl.permission.PermissionUtils
 import com.example.inflation_irl.scanner.BarCodeScanner
-import com.google.firebase.firestore.ktx.firestore
-import com.google.firebase.ktx.Firebase
-import com.google.firebase.storage.ktx.storage
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers.Main
 import kotlinx.coroutines.launch
@@ -76,6 +72,11 @@ class ScanBarcodeFragment : Fragment() {
 
         checkPermission(Manifest.permission.ACCESS_FINE_LOCATION, MY_PERMISSIONS_REQUEST_LOCATION)
         setupAddPictureButton()
+
+//        if (!promptClosed) { // promp to select a store
+//            GridLayoutDialogFragment().show(parentFragmentManager, "grid_layout_dialog")
+//            // click listener for images
+//        }
         return view
     }
 
