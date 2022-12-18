@@ -87,6 +87,7 @@ class ProductInfoFragment : Fragment() {
                     } else {
                         products.forEach {
                             Log.d("ProductInfoFragment", "handleProductFound: $it")
+                            // TODO: Show all these product data points with time and price in a list
                         }
                     }
                 }
