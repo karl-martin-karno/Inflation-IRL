@@ -48,8 +48,6 @@ class ScanBarcodeFragment : Fragment() {
     private val binding get() = _binding!!
     private val items = listOf(Store.PRISMA, Store.SELVER)
     private var imageFilePath: String? = null
-    private val db = Firebase.firestore
-    private val storage = Firebase.storage
     private val barCodeScanner: BarCodeScanner = BarCodeScanner()
     private val imageUtils: com.example.inflation_irl.image.ImageUtils =
         com.example.inflation_irl.image.ImageUtils()
@@ -122,7 +120,7 @@ class ScanBarcodeFragment : Fragment() {
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
             if (result.resultCode == RESULT_OK) {
                 CoroutineScope(Main).launch {
-                    binding.productBarCodeEditText.setText("Loading...")
+                    binding.productBarCodeEditText.setText(getString(R.string.loading_text))
                     imageFilePath?.let {
                         val img = imageUtils.createScaledImage(it)
                         val imageView = binding.productLabelImageView
