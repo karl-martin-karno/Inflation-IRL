@@ -18,7 +18,7 @@ class ImageUtils {
             var bmp = BitmapFactory.decodeFile(imagePath)
             val ratio = bmp.width.toDouble() / bmp.height
             bmp = fixOrientation(bmp, imagePath)
-            createScaledBitmap(bmp, (800 * ratio).toInt(), 800, false)
+            createScaledBitmap(bmp, (800 * ratio).toInt(), (800 * ratio).toInt(), false)
         }
     }
 
