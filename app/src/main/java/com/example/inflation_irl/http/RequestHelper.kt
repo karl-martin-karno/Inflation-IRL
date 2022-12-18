@@ -3,6 +3,8 @@ package com.example.inflation_irl.http
 import android.content.Context
 import com.example.inflation_irl.Store
 import com.koushikdutta.ion.Ion
+import kotlinx.coroutines.Dispatchers.IO
+import kotlinx.coroutines.withContext
 
 class RequestHelper(
     private val mContext: Context,
@@ -12,6 +14,7 @@ class RequestHelper(
     companion object {
         const val PRISMA_BASE_URL = "https://prismamarket.ee/entry/"
         const val SELVER_BASE_URL = "https://www.selver.ee/search?q="
+        const val WAYBACK_MACHINE_BASE_URL = "https://archive.org/wayback/available?url="
     }
 
     fun interface RequestHandler {
@@ -25,8 +28,37 @@ class RequestHelper(
         }
     }
 
-    fun getProductPageHtml(barCode: String, requestHandler: RequestHandler) {
+    fun getProductPageHtmlByUrl(url: String, requestHandler: RequestHandler) {
+
+        Ion.with(mContext)
+            .load(url)
+            .asString()
+            .setCallback { e, result ->
+                if (e == null) {
+                    requestHandler.onResponse(result)
+                } else {
+                    requestHandler.onResponse(e)
+                }
+            }
+
+    }
+
+    fun getProductPageHtmlByBarCode(barCode: String, requestHandler: RequestHandler) {
         val url = combineWithBaseUrl(barCode)
+        Ion.with(mContext)
+            .load(url)
+            .asString()
+            .setCallback { e, htmlResponse ->
+                if (e != null) {
+                    requestHandler.onResponse(e)
+                } else {
+                    requestHandler.onResponse(htmlResponse)
+                }
+            }
+    }
+
+    fun getProductPageSnapshots(barCode: String, requestHandler: RequestHandler) {
+        val url = WAYBACK_MACHINE_BASE_URL + combineWithBaseUrl(barCode)
         Ion.with(mContext)
             .load(url)
             .asString()
