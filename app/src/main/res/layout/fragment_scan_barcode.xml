@@ -34,8 +34,10 @@
 
     <ImageView
         android:id="@+id/productLabelImageView"
-        android:layout_width="335dp"
+        android:layout_width="wrap_content"
         android:layout_height="324dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
         android:contentDescription="@string/picture_of_the_product_label"
         app:layout_constraintBottom_toTopOf="@+id/scan_barcode_button"
         app:layout_constraintEnd_toEndOf="parent"

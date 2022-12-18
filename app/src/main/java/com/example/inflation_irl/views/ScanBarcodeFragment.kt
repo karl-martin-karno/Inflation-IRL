@@ -94,8 +94,8 @@ class ScanBarcodeFragment : Fragment() {
                     binding.productBarCodeEditText.setText("Loading...")
                     imageFilePath?.let {
                         val img = imageUtils.createScaledImage(it)
-                        binding.productLabelImageView.setImageBitmap(img)
-                        barCodeScanner.findBarcode(img) { result, isBarCodeFound ->
+                        val imageView = binding.productLabelImageView
+                        barCodeScanner.findBarcode(img, imageView) { result, isBarCodeFound ->
                             if (!isBarCodeFound) {
                                 handleBarCodeNotFound(result)
                             } else {

@@ -1,10 +1,12 @@
 package com.example.inflation_irl.scanner
 
-import android.graphics.Bitmap
+import android.graphics.*
+import android.widget.ImageView
 import com.google.mlkit.vision.barcode.BarcodeScanning
 import com.google.mlkit.vision.common.InputImage
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.withContext
+
 
 class BarCodeScanner {
 
@@ -18,7 +20,7 @@ class BarCodeScanner {
     }
 
 
-    suspend fun findBarcode(bitmap: Bitmap, barCodeHandler: BarCodeHandler) {
+    suspend fun findBarcode(bitmap: Bitmap, imageView: ImageView,  barCodeHandler: BarCodeHandler) {
         return withContext(IO) {
             val scanner = BarcodeScanning.getClient()
             val image = InputImage.fromBitmap(bitmap, 0)
@@ -28,6 +30,9 @@ class BarCodeScanner {
                         barCodeHandler.onBarcodeRead(BARCODE_NOT_FOUND, false)
                     } else {
                         val barCode = barcodes[0].displayValue
+                        val rect: Rect? = barcodes[0].boundingBox
+
+                        drawRectOnBitmap(imageView, bitmap, rect)
                         barCode?.let { barCodeHandler.onBarcodeRead(barCode, true) }
                     }
                 }
@@ -38,5 +43,15 @@ class BarCodeScanner {
                     scanner.close()
                 }
         }
+    }
+
+    private fun drawRectOnBitmap(imageView: ImageView, bitmap: Bitmap, rect: Rect?) {
+        imageView.setImageBitmap(bitmap)
+        val canvas = Canvas(bitmap)
+        val paint = Paint()
+        paint.color = Color.RED
+        paint.style = Paint.Style.STROKE
+        paint.strokeWidth = 5f
+        rect?.let { canvas.drawRect(it, paint) }
     }
 }
