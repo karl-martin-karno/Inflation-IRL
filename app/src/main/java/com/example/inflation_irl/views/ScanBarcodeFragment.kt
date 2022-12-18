@@ -169,7 +169,11 @@ class ScanBarcodeFragment : Fragment() {
         CoroutineScope(Main).launch {
             // TODO:
             val store = getActivity()?.let { locationUtils.findNearestStore(it.applicationContext) }
-            binding.shopField.setText(store.toString(), false)
+            if (store==null) {
+                binding.shopField.setText("PRISMA", false)
+            } else {
+                binding.shopField.setText(store.toString(), false)
+            }
         }
     }
 
