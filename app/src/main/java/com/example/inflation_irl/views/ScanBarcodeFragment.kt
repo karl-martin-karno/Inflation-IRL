@@ -101,8 +101,9 @@ class ScanBarcodeFragment : Fragment() {
             return
         }
 
-        if (binding.productBarCodeEditText.text.length != 13) {
-            Toast.makeText(requireContext(), "Barcode should have 13 numbers", Toast.LENGTH_SHORT).show()
+        val barCodeLength = binding.productBarCodeEditText.text.length
+        if (barCodeLength < 12 || barCodeLength > 14) {
+            Toast.makeText(requireContext(), "Barcode should have 12-14 numbers", Toast.LENGTH_SHORT).show()
             return
         }
 
