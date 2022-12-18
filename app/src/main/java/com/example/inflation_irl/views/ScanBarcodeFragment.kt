@@ -1,7 +1,7 @@
 package com.example.inflation_irl.views
 
 import android.Manifest
-import android.app.Activity
+import android.annotation.SuppressLint
 import android.app.Activity.RESULT_OK
 import android.content.Intent
 import android.content.pm.PackageManager
@@ -14,7 +14,6 @@ import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
 import androidx.fragment.app.Fragment
@@ -85,6 +84,7 @@ class ScanBarcodeFragment : Fragment() {
         return view
     }
 
+    @SuppressLint("SetTextI18n")
     private var resultLauncher =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
             if (result.resultCode == RESULT_OK) {
@@ -164,6 +164,7 @@ class ScanBarcodeFragment : Fragment() {
 
     private fun handleFindNearestStore() {
         CoroutineScope(Main).launch {
+            // TODO:
             val store = locationUtils.findNearestStore()
         }
     }
