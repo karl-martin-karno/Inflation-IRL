@@ -3,8 +3,6 @@ package com.example.inflation_irl.http
 import android.content.Context
 import com.example.inflation_irl.Store
 import com.koushikdutta.ion.Ion
-import kotlinx.coroutines.Dispatchers.IO
-import kotlinx.coroutines.withContext
 
 class RequestHelper(
     private val mContext: Context,
@@ -14,6 +12,7 @@ class RequestHelper(
     companion object {
         const val PRISMA_BASE_URL = "https://prismamarket.ee/entry/"
         const val SELVER_BASE_URL = "https://www.selver.ee/search?q="
+        const val KAUBAMAJA_BASE_URL = "https://www.kaubamaja.ee/search/?q="
         const val WAYBACK_MACHINE_BASE_URL = "https://archive.org/wayback/available?url="
     }
 
@@ -25,6 +24,8 @@ class RequestHelper(
         return when (store) {
             Store.PRISMA -> PRISMA_BASE_URL + barCode
             Store.SELVER -> SELVER_BASE_URL + barCode
+            Store.MAXIMA -> PRISMA_BASE_URL + barCode
+            Store.KAUBAMAJA-> KAUBAMAJA_BASE_URL + barCode
         }
     }
 

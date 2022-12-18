@@ -38,13 +38,13 @@ class ProductInfoFragment : Fragment() {
     ): View? {
         _binding = FragmentProductInfoBinding.inflate(inflater, container, false)
         val view = binding.root
-        val icon = arguments?.getInt("icon") ?: R.drawable.red_bull
-        val store = arguments?.getInt("store") ?: R.drawable.rimi
-        val title = arguments?.getString("title") ?: ""
+        val _store = arguments?.getString("store") ?: ""
+        val _barcode = arguments?.getString("barcode") ?: ""
 
-        binding.productInfoItemIcon.setImageResource(icon)
-        binding.productInfoStoreIcon.setImageResource(store)
-        binding.productInfoTitle.text = title
+        // TODO delete dummy data
+        binding.productInfoItemIcon.setImageResource(R.drawable.red_bull)
+        binding.productInfoStoreIcon.setImageResource(R.drawable.prisma)
+        binding.productInfoTitle.text = "Example text"
 
         binding.productTitleEditText.focusable = View.NOT_FOCUSABLE
         binding.productPriceEditText.focusable = View.NOT_FOCUSABLE
@@ -66,9 +66,7 @@ class ProductInfoFragment : Fragment() {
             Store.PRISMA -> prismaHandler.getProduct(barCode) { product ->
                 handleProductFound(product)
             }
-            Store.SELVER -> selverHandler.getProduct(barCode) { product ->
-                handleProductFound(product)
-            }
+            else -> Toast.makeText(requireContext(),"Only Prisma is currently supported",Toast.LENGTH_SHORT).show()
         }
     }
 
