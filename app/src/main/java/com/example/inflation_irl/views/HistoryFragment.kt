@@ -34,28 +34,28 @@ class HistoryFragment : Fragment() {
         dataset.add(
             HistoryListItem(
                 title = "Doritos Nacho Cheese Flavored Tortilla Chips",
-                icon = R.drawable.doritos,
+                iconUrl = "https://s3-eu-west-1.amazonaws.com/balticsimages/images/180x220/3f4dac76479e9d075db6b662f46c251b.png",
                 store = R.drawable.prisma
             )
         )
         dataset.add(
             HistoryListItem(
                 title = "Monster Energy Zero Sugar Energy Drink",
-                icon = R.drawable.monster_energy_drink,
+                iconUrl = "https://s3-eu-west-1.amazonaws.com/balticsimages/images/180x220/89e4630f3cf26fb4b0c620e27eb01134.png",
                 store = R.drawable.prisma
             )
         )
         dataset.add(
             HistoryListItem(
                 title = "DiGiorno Traditional Crust Pepperoni Frozen Pizza",
-                icon = R.drawable.pizza,
+                iconUrl = "https://s3-eu-west-1.amazonaws.com/balticsimages/images/180x220/330c6cdbf139ec891d2d6af1b637b88d.png",
                 store = R.drawable.rimi
             )
         )
         dataset.add(
             HistoryListItem(
                 title = "Red Bull Energy Drink 4x 0.25L",
-                icon = R.drawable.red_bull,
+                iconUrl = "https://s3-eu-west-1.amazonaws.com/balticsimages/images/180x220/77d9d03eec79bfb50882db7cff50f090.png",
                 store = R.drawable.rimi
             )
         )

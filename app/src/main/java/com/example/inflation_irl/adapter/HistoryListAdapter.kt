@@ -9,6 +9,7 @@ import androidx.core.os.bundleOf
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.example.inflation_irl.R
+import com.koushikdutta.ion.Ion
 
 
 class HistoryListAdapter(private val dataset: MutableList<HistoryListItem>) :
@@ -31,10 +32,12 @@ class HistoryListAdapter(private val dataset: MutableList<HistoryListItem>) :
         val item = dataset[position]
         holder.textView.text = item.title
         holder.storeIcon.setImageResource(item.store)
-        holder.itemIcon.setImageResource(item.icon)
+        Ion.with(holder.itemIcon)
+            .error(R.drawable.default_history_list_icon)
+            .load(item.iconUrl)
         holder.view.setOnClickListener {
             // TODO only pass id and query info from firebase
-            val bundle = bundleOf("icon" to item.icon, "store" to item.store, "title" to item.title)
+            val bundle = bundleOf("icon" to item.iconUrl, "store" to item.store, "title" to item.title)
             holder.view.findNavController().navigate(R.id.productInfoFragment, bundle)
         }
     }
@@ -42,5 +45,5 @@ class HistoryListAdapter(private val dataset: MutableList<HistoryListItem>) :
     override fun getItemCount() = dataset.size
 }
 
-data class HistoryListItem(val title: String, val icon: Int, val store: Int)
+data class HistoryListItem(val title: String, val iconUrl: String, val store: Int)
 

@@ -14,7 +14,7 @@
         android:contentDescription="@string/history_list_store_icon_description_tooltip"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/doritos" />
+        app:srcCompat="@drawable/default_history_list_icon" />
 
     <ImageView
         android:id="@+id/history_list_item_store_icon"
