@@ -9,6 +9,7 @@ import android.os.Bundle
 import android.provider.MediaStore
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -163,7 +164,7 @@ class ScanBarcodeFragment : Fragment() {
     private fun handleFindNearestStore() {
         CoroutineScope(Main).launch {
             // TODO:
-            val store = locationUtils.findNearestStore()
+            val store = getActivity()?.let { locationUtils.findNearestStore(it.applicationContext) }
         }
     }
 
