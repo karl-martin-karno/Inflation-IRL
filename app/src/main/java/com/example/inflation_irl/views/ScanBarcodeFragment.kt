@@ -105,9 +105,14 @@ class ScanBarcodeFragment : Fragment() {
             Toast.makeText(requireContext(), "Barcode should have 12-14 numbers", Toast.LENGTH_SHORT).show()
             return
         }
+        if (binding.shopField.text.equals("PRISMA")) {
+            val bundle = bundleOf("icon" to R.drawable.red_bull, "store" to R.drawable.prisma, "title" to "some description goes here")
+            findNavController(view).navigate(R.id.productInfoFragment2, bundle)
 
-        val bundle = bundleOf("icon" to R.drawable.red_bull, "store" to R.drawable.prisma, "title" to "some description goes here")
-        findNavController(view).navigate(R.id.productInfoFragment2, bundle)
+        } else if (binding.shopField.text.equals("SELVER")) {
+            val bundle = bundleOf("icon" to R.drawable.red_bull, "store" to R.drawable.selver, "title" to "some description goes here")
+            findNavController(view).navigate(R.id.productInfoFragment2, bundle)
+        }
     }
 
     @SuppressLint("SetTextI18n")
@@ -163,6 +168,7 @@ class ScanBarcodeFragment : Fragment() {
         CoroutineScope(Main).launch {
             // TODO:
             val store = getActivity()?.let { locationUtils.findNearestStore(it.applicationContext) }
+            binding.shopField.setText(store.toString(), false)
         }
     }
 
