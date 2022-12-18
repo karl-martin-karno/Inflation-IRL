@@ -31,7 +31,13 @@ class HistoryListAdapter(private val dataset: MutableList<HistoryListItem>) :
     override fun onBindViewHolder(holder: ItemViewHolder, position: Int) {
         val item = dataset[position]
         holder.textView.text = item.title
-        holder.storeIcon.setImageResource(item.store)
+        holder.storeIcon.setImageResource(when(item.store){
+            "Prisma" -> R.drawable.prisma
+            "Rimi" -> R.drawable.rimi
+            "Maxima" -> R.drawable.maxima
+            "Selver" -> R.drawable.selver
+            else ->  throw IllegalArgumentException("Unknown store name provided")
+        })
         Ion.with(holder.itemIcon)
             .error(R.drawable.default_history_list_icon)
             .load(item.iconUrl)
@@ -45,5 +51,5 @@ class HistoryListAdapter(private val dataset: MutableList<HistoryListItem>) :
     override fun getItemCount() = dataset.size
 }
 
-data class HistoryListItem(val title: String, val iconUrl: String, val store: Int)
+data class HistoryListItem(val title: String, val iconUrl: String, val store: String)
 
