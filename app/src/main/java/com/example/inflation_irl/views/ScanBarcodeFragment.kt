@@ -15,11 +15,13 @@ import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.activity.viewModels
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.navigation.Navigation.findNavController
 import com.example.inflation_irl.R
 import com.example.inflation_irl.Store
@@ -28,6 +30,7 @@ import com.example.inflation_irl.http.RequestHelper
 import com.example.inflation_irl.location.LocationUtils
 import com.example.inflation_irl.permission.PermissionUtils
 import com.example.inflation_irl.scanner.BarCodeScanner
+import com.example.inflation_irl.viewmodel.BarcodeViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers.Main
 import kotlinx.coroutines.launch
@@ -51,7 +54,7 @@ class ScanBarcodeFragment : Fragment() {
     private val permissionUtils: PermissionUtils = PermissionUtils()
     private val locationUtils: LocationUtils = LocationUtils()
     private val prompt = GridLayoutDialogFragment(::selectStore)
-    private lateinit var selectedStore: Store
+    private val viewModel: BarcodeViewModel by viewModels()
 
     companion object {
         const val MY_PERMISSIONS_REQUEST_LOCATION = 99
@@ -66,16 +69,20 @@ class ScanBarcodeFragment : Fragment() {
         val view = binding.root
 
         // Enable the button if the EditText is not empty
-        handleBarcodeEdit()
-        binding.findPriceHistoryButton.setOnClickListener { handleQueryProductInfo(view) }
+        if (viewModel.isStoreSelected()) updateStoreIcon(viewModel.selectedStore)
 
         checkPermission(Manifest.permission.ACCESS_FINE_LOCATION, MY_PERMISSIONS_REQUEST_LOCATION)
         setupAddPictureButton()
 
-        if (!this::selectedStore.isInitialized) {
-            showStoreSelectionPrompt()
-        }
+        handleBarcodeEdit()
         binding.selectedStoreIcon.setOnClickListener { showStoreSelectionPrompt() }
+        binding.findPriceHistoryButton.setOnClickListener {
+            if (!viewModel.isStoreSelected()) {
+                showStoreSelectionPrompt()
+            } else {
+                handleQueryProductInfo(view)
+            }
+        }
 
         return view
     }
@@ -85,7 +92,12 @@ class ScanBarcodeFragment : Fragment() {
     }
 
     private fun selectStore(store: Store) {
-        selectedStore = store
+        viewModel.selectedStore = store
+        updateStoreIcon(store)
+        prompt.dismiss()
+    }
+
+    private fun updateStoreIcon(store: Store) {
         binding.selectedStoreIcon.setImageResource(
             when (store) {
                 Store.PRISMA -> R.drawable.prisma
@@ -94,7 +106,6 @@ class ScanBarcodeFragment : Fragment() {
                 Store.KAUBAMAJA -> R.drawable.kaubamaja
             }
         )
-        prompt.dismiss()
     }
 
     private fun handleBarcodeEdit() {
@@ -122,7 +133,7 @@ class ScanBarcodeFragment : Fragment() {
             return
         }
 
-        if (selectedStore == Store.PRISMA) {
+        if (viewModel.selectedStore == Store.PRISMA) {
             val bundle = bundleOf(
                 "store" to Store.PRISMA.name,
                 "barcode" to "4743050000045"
@@ -192,7 +203,7 @@ class ScanBarcodeFragment : Fragment() {
             // TODO:
             val store = getActivity()?.let { locationUtils.findNearestStore(it.applicationContext) }
             if (store != null) {
-                selectedStore = store
+                viewModel.selectedStore = store
                 prompt.dismiss()
             }
         }
