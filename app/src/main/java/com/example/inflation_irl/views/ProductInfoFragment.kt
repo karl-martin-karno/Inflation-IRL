@@ -77,12 +77,19 @@ class ProductInfoFragment : Fragment() {
         binding.productTitleEditText.setText(product.name)
         Log.d("ProductInfoFragment", "handleProductFound: $product")
         CoroutineScope(IO).launch {
-            fireBaseDao.getProducts { products ->
-                if (products.isEmpty()) {
-                    Toast.makeText(requireContext(), "No products found", Toast.LENGTH_SHORT).show()
-                } else {
-                    products.forEach {
-                        Log.d("ProductInfoFragment", "handleProductFound: ${it}")
+            product.barCode?.let { barcode ->
+                fireBaseDao.getProductsByBarCodeAndStore(barcode, product.store) { products ->
+                    if (products.isEmpty()) {
+                        Toast.makeText(
+                            requireContext(),
+                            "Previous product history not found",
+                            Toast.LENGTH_SHORT
+                        )
+                            .show()
+                    } else {
+                        products.forEach {
+                            Log.d("ProductInfoFragment", "handleProductFound: $it")
+                        }
                     }
                 }
             }

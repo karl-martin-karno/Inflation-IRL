@@ -103,16 +103,30 @@ class ScanBarcodeFragment : Fragment() {
 
         val barCodeLength = binding.productBarCodeEditText.text.length
         if (barCodeLength < 12 || barCodeLength > 14) {
-            Toast.makeText(requireContext(), "Barcode should have 12-14 numbers", Toast.LENGTH_SHORT).show()
+            Toast.makeText(
+                requireContext(),
+                "Barcode should have 12-14 numbers",
+                Toast.LENGTH_SHORT
+            ).show()
             return
         }
-        if (binding.shopField.text.equals("PRISMA")) {
-            val bundle = bundleOf("icon" to R.drawable.red_bull, "store" to R.drawable.prisma, "title" to "some description goes here")
+
+        // FIXME: This does not work
+        if (binding.shopField.text.equals("SELVER")) {
+            val bundle = bundleOf(
+                "icon" to R.drawable.red_bull,
+                "store" to R.drawable.selver,
+                "title" to "some description goes here"
+            )
+            findNavController(view).navigate(R.id.productInfoFragment2, bundle)
+        } else {
+            val bundle = bundleOf(
+                "icon" to R.drawable.red_bull,
+                "store" to R.drawable.prisma,
+                "title" to "some description goes here"
+            )
             findNavController(view).navigate(R.id.productInfoFragment2, bundle)
 
-        } else if (binding.shopField.text.equals("SELVER")) {
-            val bundle = bundleOf("icon" to R.drawable.red_bull, "store" to R.drawable.selver, "title" to "some description goes here")
-            findNavController(view).navigate(R.id.productInfoFragment2, bundle)
         }
     }
 
@@ -169,7 +183,7 @@ class ScanBarcodeFragment : Fragment() {
         CoroutineScope(Main).launch {
             // TODO:
             val store = getActivity()?.let { locationUtils.findNearestStore(it.applicationContext) }
-            if (store==null) {
+            if (store == null) {
                 binding.shopField.setText("PRISMA", false)
             } else {
                 binding.shopField.setText(store.toString(), false)

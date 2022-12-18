@@ -8,7 +8,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-class SelverHandler(context: Context,) {
+class SelverHandler(context: Context) {
 
     private val requestHelper: RequestHelper = RequestHelper(context, Store.SELVER)
     private val selverParser: SelverParser = SelverParser()
@@ -17,9 +17,9 @@ class SelverHandler(context: Context,) {
         fun onResponse(product: Product)
     }
 
-    fun getProduct(barCode: String, productHandler: ProductHandler){
+    fun getProduct(barCode: String, productHandler: ProductHandler) {
         CoroutineScope(Dispatchers.IO).launch {
-            requestHelper.getProductPageHtml(barCode) { htmlResponse ->
+            requestHelper.getProductPageHtmlByBarCode(barCode) { htmlResponse ->
                 if (htmlResponse is String) {
                     CoroutineScope(Dispatchers.IO).launch {
                         selverParser.parseProductPageHtml(htmlResponse) { product ->
