@@ -2,13 +2,14 @@ package com.example.inflation_irl.views
 
 import android.os.Bundle
 import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import com.example.inflation_irl.Product
 import com.example.inflation_irl.R
 import com.example.inflation_irl.Store
+import com.example.inflation_irl.dao.FireStoreDao
 import com.example.inflation_irl.databinding.FragmentProductInfoBinding
 import com.example.inflation_irl.prisma.PrismaHandler
 import com.example.inflation_irl.selver.SelverHandler
@@ -25,6 +26,7 @@ class ProductInfoFragment : Fragment() {
     private val binding get() = _binding!!
     private lateinit var prismaHandler: PrismaHandler
     private lateinit var selverHandler: SelverHandler
+    private val fireBaseDao: FireStoreDao = FireStoreDao()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -64,6 +66,13 @@ class ProductInfoFragment : Fragment() {
     private fun handleProductFound(product: Product) {
         binding.productPriceEditText.setText(product.price.toString())
         binding.productTitleEditText.setText(product.name)
-        Log.d("MainActivity", "handleProductFound: $product")
+        Log.d("ProductInfoFragment", "handleProductFound: $product")
+        fireBaseDao.addProduct(product)
+
+        fireBaseDao.getProducts { products ->
+            products.forEach {
+                Log.d("ProductInfoFragment", "handleProductFound: ${it}")
+            }
+        }
     }
 }
