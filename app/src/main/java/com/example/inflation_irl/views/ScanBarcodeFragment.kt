@@ -7,25 +7,24 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.provider.MediaStore
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
+import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
-import com.example.inflation_irl.Product
+import androidx.navigation.Navigation.findNavController
 import com.example.inflation_irl.R
 import com.example.inflation_irl.Store
 import com.example.inflation_irl.databinding.FragmentScanBarcodeBinding
 import com.example.inflation_irl.location.LocationUtils
 import com.example.inflation_irl.permission.PermissionUtils
-import com.example.inflation_irl.prisma.PrismaHandler
 import com.example.inflation_irl.scanner.BarCodeScanner
-import com.example.inflation_irl.selver.SelverHandler
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.ktx.storage
@@ -53,8 +52,7 @@ class ScanBarcodeFragment : Fragment() {
         com.example.inflation_irl.image.ImageUtils()
     private val permissionUtils: PermissionUtils = PermissionUtils()
     private val locationUtils: LocationUtils = LocationUtils()
-    private lateinit var prismaHandler: PrismaHandler
-    private lateinit var selverHandler: SelverHandler
+
 
     companion object {
         const val MY_PERMISSIONS_REQUEST_LOCATION = 99
@@ -68,20 +66,29 @@ class ScanBarcodeFragment : Fragment() {
         _binding = FragmentScanBarcodeBinding.inflate(inflater, container, false)
         val view = binding.root
 
-        binding.scanBarcodeButton.setOnClickListener {
-            Toast.makeText(requireContext(), "Scan Barcode clicked", Toast.LENGTH_SHORT).show();
-        }
-
-        prismaHandler = PrismaHandler(requireContext())
-        selverHandler = SelverHandler(requireContext())
         val adapter = ArrayAdapter(requireContext(), R.layout.shop_list_item, items)
         binding.shopField.setAdapter(adapter)
         binding.findPriceHistoryButton.isEnabled = false
         binding.shopField.setText(items[0].name, false)
 
+        binding.scanBarcodeButton.setOnClickListener { Toast.makeText(requireContext(), "Scan Barcode clicked", Toast.LENGTH_SHORT).show(); }
+        binding.findPriceHistoryButton.setOnClickListener { handleQueryProductInfo(view) }
+
         checkPermission(Manifest.permission.ACCESS_FINE_LOCATION, MY_PERMISSIONS_REQUEST_LOCATION)
         setupAddPictureButton()
         return view
+    }
+
+
+    private fun handleQueryProductInfo(view: ConstraintLayout) {
+        if (binding.shopField.text == null) {
+            Toast.makeText(requireContext(), "Please select your shop first", Toast.LENGTH_SHORT)
+                .show()
+            return
+        }
+
+        val bundle = bundleOf("icon" to R.drawable.red_bull, "store" to R.drawable.prisma, "title" to "some description goes here")
+        findNavController(view).navigate(R.id.productInfoFragment2, bundle)
     }
 
     @SuppressLint("SetTextI18n")
@@ -89,17 +96,18 @@ class ScanBarcodeFragment : Fragment() {
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
             if (result.resultCode == RESULT_OK) {
                 CoroutineScope(Main).launch {
-                    binding.productTitleEditText.setText("Loading...")
-                    binding.productPriceEditText.setText("Loading...")
                     binding.productBarCodeEditText.setText("Loading...")
                     imageFilePath?.let {
                         val img = imageUtils.createScaledImage(it)
                         val imageView = binding.productLabelImageView
                         barCodeScanner.findBarcode(img, imageView) { result, isBarCodeFound ->
                             if (!isBarCodeFound) {
+                                binding.findPriceHistoryButton.isEnabled = false
                                 handleBarCodeNotFound(result)
                             } else {
-                                handleBarCodeFound(result)
+                                binding.findPriceHistoryButton.isEnabled = true
+                                binding.productBarCodeEditText.setText(result)
+//                                handleBarCodeFound(result)
                             }
                         }
                     }
@@ -119,33 +127,6 @@ class ScanBarcodeFragment : Fragment() {
                 checkPermission(Manifest.permission.CAMERA, CAMERA_PERMISSION_CODE)
             }
         }
-    }
-
-    private fun handleBarCodeFound(barCode: String) {
-        // TODO: Why does this not work
-        if (binding.shopField.text == null) {
-            Toast.makeText(requireContext(), "Please select your shop first", Toast.LENGTH_SHORT)
-                .show()
-            return
-        }
-
-        binding.findPriceHistoryButton.isEnabled = true
-
-        when (Store.valueOf(binding.shopField.text.toString())) {
-            Store.PRISMA -> prismaHandler.getProduct(barCode) { product ->
-                handleProductFound(product)
-            }
-            Store.SELVER -> selverHandler.getProduct(barCode) { product ->
-                handleProductFound(product)
-            }
-        }
-    }
-
-    private fun handleProductFound(product: Product) {
-        binding.productBarCodeEditText.setText(product.barCode)
-        binding.productPriceEditText.setText(product.price.toString())
-        binding.productTitleEditText.setText(product.name)
-        Log.d("MainActivity", "handleProductFound: $product")
     }
 
     private fun checkPermission(permission: String, requestCode: Int) {
@@ -208,8 +189,6 @@ class ScanBarcodeFragment : Fragment() {
     private fun handleBarCodeNotFound(result: String) {
         binding.findPriceHistoryButton.isEnabled = false
         binding.productBarCodeEditText.setText("")
-        binding.productPriceEditText.setText("")
-        binding.productTitleEditText.setText("")
         Toast.makeText(requireContext(), result, Toast.LENGTH_LONG).show()
     }
 }

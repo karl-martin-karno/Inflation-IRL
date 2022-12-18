@@ -7,6 +7,40 @@
     android:layout_height="match_parent"
     tools:context=".views.ProductInfoFragment">
 
+    <EditText
+        android:id="@+id/productPriceEditText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="32dp"
+        android:autofillHints="productPrice"
+        android:ems="10"
+        android:hint="@string/product_price"
+        android:inputType="textPersonName"
+        android:minHeight="48dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/productTitleEditText" />
+
+    <EditText
+        android:id="@+id/productTitleEditText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="32dp"
+        android:autofillHints="productTitle"
+        android:ems="10"
+        android:hint="@string/product_title"
+        android:inputType="textPersonName"
+        android:minHeight="48dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/product_info_title" />
+
     <Button
         android:id="@+id/button2"
         android:layout_width="wrap_content"
@@ -22,7 +56,7 @@
         android:id="@+id/product_info_title"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_marginStart="16dp"
+        android:layout_marginStart="32dp"
         android:layout_marginEnd="16dp"
         android:textColor="@color/black"
         android:textSize="16sp"
@@ -38,35 +72,20 @@
         android:id="@+id/product_info_item_icon"
         android:layout_width="134dp"
         android:layout_height="129dp"
-        android:layout_marginEnd="16dp"
-        android:layout_marginBottom="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="32dp"
         android:src="@drawable/doritos"
-        app:layout_constraintBottom_toTopOf="@+id/product_info_timeseries"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/product_info_store_icon" />
 
     <ImageView
         android:id="@+id/product_info_store_icon"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
+        android:layout_marginStart="32dp"
         android:layout_marginTop="16dp"
-        android:layout_marginBottom="16dp"
         android:src="@drawable/prisma"
-        app:layout_constraintBottom_toTopOf="@+id/product_info_title"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
-
-    <ImageView
-        android:id="@+id/product_info_timeseries"
-        android:layout_width="0dp"
-        android:layout_height="248dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginEnd="16dp"
-        android:layout_marginBottom="16dp"
-        android:src="@drawable/timeseries"
-        app:layout_constraintBottom_toTopOf="@+id/button2"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

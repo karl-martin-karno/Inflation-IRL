@@ -9,5 +9,14 @@
         android:id="@+id/scanBarcodeFragment"
         android:name="com.example.inflation_irl.views.ScanBarcodeFragment"
         android:label="Product Info"
-        tools:layout="@layout/fragment_scan_barcode" />
+        tools:layout="@layout/fragment_scan_barcode" >
+        <action
+            android:id="@+id/action_scanBarcodeFragment_to_productInfoFragment2"
+            app:destination="@id/productInfoFragment2" />
+    </fragment>
+    <fragment
+        android:id="@+id/productInfoFragment2"
+        android:name="com.example.inflation_irl.views.ProductInfoFragment"
+        android:label="fragment_product_info"
+        tools:layout="@layout/fragment_product_info" />
 </navigation>
