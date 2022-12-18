@@ -46,6 +46,9 @@ class ProductInfoFragment : Fragment() {
         binding.productInfoStoreIcon.setImageResource(store)
         binding.productInfoTitle.text = title
 
+        binding.productTitleEditText.focusable = View.NOT_FOCUSABLE
+        binding.productPriceEditText.focusable = View.NOT_FOCUSABLE
+
         prismaHandler = PrismaHandler(requireContext())
         selverHandler = SelverHandler(requireContext())
 
