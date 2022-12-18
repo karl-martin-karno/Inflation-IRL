@@ -86,7 +86,7 @@
         android:autofillHints="productTitle"
         android:ems="10"
         android:hint="@string/product_bar_code"
-        android:inputType="textPersonName"
+        android:inputType="number"
         android:minHeight="48dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1.0"
