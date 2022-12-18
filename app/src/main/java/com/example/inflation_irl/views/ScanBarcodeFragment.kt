@@ -7,6 +7,8 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.provider.MediaStore
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -53,7 +55,6 @@ class ScanBarcodeFragment : Fragment() {
     private val permissionUtils: PermissionUtils = PermissionUtils()
     private val locationUtils: LocationUtils = LocationUtils()
 
-
     companion object {
         const val MY_PERMISSIONS_REQUEST_LOCATION = 99
         private const val CAMERA_PERMISSION_CODE = 98
@@ -68,7 +69,6 @@ class ScanBarcodeFragment : Fragment() {
 
         val adapter = ArrayAdapter(requireContext(), R.layout.shop_list_item, items)
         binding.shopField.setAdapter(adapter)
-        binding.findPriceHistoryButton.isEnabled = false
         binding.shopField.setText(items[0].name, false)
 
         binding.scanBarcodeButton.setOnClickListener { Toast.makeText(requireContext(), "Scan Barcode clicked", Toast.LENGTH_SHORT).show(); }
@@ -79,11 +79,29 @@ class ScanBarcodeFragment : Fragment() {
         return view
     }
 
+    private fun handleBarcodeEdit() {
+        binding.findPriceHistoryButton.isEnabled = false
+        binding.productBarCodeEditText.addTextChangedListener(object : TextWatcher {
+            override fun afterTextChanged(s: Editable?) {
+
+                binding.findPriceHistoryButton.isEnabled = !s.isNullOrEmpty()
+            }
+
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
+        })
+    }
+
 
     private fun handleQueryProductInfo(view: ConstraintLayout) {
         if (binding.shopField.text == null) {
             Toast.makeText(requireContext(), "Please select your shop first", Toast.LENGTH_SHORT)
                 .show()
+            return
+        }
+
+        if (binding.productBarCodeEditText.text.length != 13) {
+            Toast.makeText(requireContext(), "Barcode should have 13 numbers", Toast.LENGTH_SHORT).show()
             return
         }
 
@@ -102,12 +120,9 @@ class ScanBarcodeFragment : Fragment() {
                         val imageView = binding.productLabelImageView
                         barCodeScanner.findBarcode(img, imageView) { result, isBarCodeFound ->
                             if (!isBarCodeFound) {
-                                binding.findPriceHistoryButton.isEnabled = false
                                 handleBarCodeNotFound(result)
                             } else {
-                                binding.findPriceHistoryButton.isEnabled = true
                                 binding.productBarCodeEditText.setText(result)
-//                                handleBarCodeFound(result)
                             }
                         }
                     }
