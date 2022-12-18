@@ -2,7 +2,7 @@
 
 ## Introduction
 
-This is an Android app buildt as a part of Mobile Application Development course. The app is written in Kotlin and built using Gradle.
+This is an Android app made as a part of Mobile Application Development course. The app is written in Kotlin and built using Gradle.
 
 ## Prerequisites
 
