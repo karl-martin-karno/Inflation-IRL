@@ -27,10 +27,6 @@ class SelverParser {
             // Pilt ei ole salvestatud wayback machines aga link hangitud siiski
             val thumb: String = doc.getElementsByAttributeValue("title", name).toString().split("\"")[1]
 
-            val formatter = SimpleDateFormat("yyyy-MM-dd")
-            val date = Calendar.getInstance().time
-            val current = formatter.format(date)
-
             val product = Product(
                 "0",
                 Store.SELVER,
