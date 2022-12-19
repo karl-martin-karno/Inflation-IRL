@@ -35,6 +35,8 @@ class ProductInfoFragment : Fragment() {
     private lateinit var recyclerView: RecyclerView
     private val dateFormat = SimpleDateFormat("dd. MMM yyyy, HH:mm", Locale.US)
 
+    private var navigationType = ""
+
     var dataset = emptyArray<ProductInfoItem>()
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -44,7 +46,7 @@ class ProductInfoFragment : Fragment() {
         val view = binding.root
         val store = arguments?.getString("store") ?: ""
         val barcode = arguments?.getString("barcode") ?: ""
-        val navigationType = arguments?.getString("navigation") ?: ""
+        navigationType = arguments?.getString("navigation") ?: ""
 
         // store icon
         binding.productInfoStoreIcon.setImageResource(
@@ -130,11 +132,12 @@ class ProductInfoFragment : Fragment() {
                 }
             }
             CoroutineScope(Main).launch {
-                binding.productInfoPrice.text = getString(R.string.product_price_textView, product.price.toString())
+                binding.productInfoPrice.text =
+                    getString(R.string.product_price_textView, product.price.toString())
                 binding.productInfoTitle.text = product.name
                 updateItemIcon(product.imageFilePath)
             }
-            if(product.name != "Error when searching for product") {
+            if (product.name != "Error when searching for product" && navigationType != "historyView") {
                 fireBaseDao.addProduct(product)
             }
         }
