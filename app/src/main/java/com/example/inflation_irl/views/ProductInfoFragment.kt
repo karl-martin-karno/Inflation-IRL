@@ -74,16 +74,11 @@ class ProductInfoFragment : Fragment() {
         }
 
         // Set up RecyclerView
-//        val dataset = getDummyData() // TODO replace with whole history
         recyclerView = binding.productItemHistoryReacyclerview
         val layoutManager = LinearLayoutManager(requireContext())
         recyclerView.layoutManager = layoutManager
-
         recyclerView.adapter = ProductInfoListAdapter(dataset)
 
-
-//        val selectedStore = Store.PRISMA
-//        val barCode = "4743050000045"
         handleBarCodeFound(barcode, store)
         return view
     }
@@ -92,15 +87,6 @@ class ProductInfoFragment : Fragment() {
         Ion.with(binding.productInfoItemIcon)
             .error(R.drawable.default_product_icon)
             .load(iconUrl)
-    }
-
-    private fun getDummyData(): MutableList<ProductInfoItem> {
-        val dataset = mutableListOf<ProductInfoItem>()
-        dataset.add(ProductInfoItem("15.6€", "14. jan 2022"))
-        dataset.add(ProductInfoItem("16.6€", "14. nov 2022"))
-        dataset.add(ProductInfoItem("18.6€", "14. dec 2022"))
-        dataset.add(ProductInfoItem("19.6€", "14. jul 2022"))
-        return dataset
     }
 
     private fun handleBarCodeFound(barCode: String, selectedStore: String) {
