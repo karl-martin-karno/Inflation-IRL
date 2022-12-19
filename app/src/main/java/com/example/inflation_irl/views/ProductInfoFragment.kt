@@ -23,6 +23,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.Dispatchers.Main
 import kotlinx.coroutines.launch
+import java.text.SimpleDateFormat
 
 class ProductInfoFragment : Fragment() {
 
@@ -31,6 +32,7 @@ class ProductInfoFragment : Fragment() {
     private lateinit var prismaHandler: PrismaHandler
     private val fireBaseDao: FireStoreDao = FireStoreDao()
     private lateinit var recyclerView: RecyclerView
+    val dateFormat = SimpleDateFormat("dd. MMM yyyy")
 
     var dataset = emptyArray<ProductInfoItem>()
     override fun onCreateView(
@@ -136,7 +138,7 @@ class ProductInfoFragment : Fragment() {
                             .map {
                                 ProductInfoItem(
                                     it.price.toString(),
-                                    it.date.toDate().toString()
+                                    dateFormat.format(it.date.toDate())
                                 )
                             }.toTypedArray()
                         recyclerView.adapter = ProductInfoListAdapter(dataset)
