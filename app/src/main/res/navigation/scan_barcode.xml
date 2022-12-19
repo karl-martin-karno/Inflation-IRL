@@ -17,6 +17,6 @@
     <fragment
         android:id="@+id/productInfoFragment2"
         android:name="com.example.inflation_irl.views.ProductInfoFragment"
-        android:label="fragment_product_info"
+        android:label="Product Info"
         tools:layout="@layout/fragment_product_info" />
 </navigation>
