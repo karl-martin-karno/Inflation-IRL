@@ -120,7 +120,6 @@ class ProductInfoFragment : Fragment() {
                             .show()
                     } else {
                         dataset = products
-                            .sortedByDescending { it.date }
                             .map {
                                 ProductInfoItem(
                                     it.price.toString(),

@@ -27,7 +27,7 @@ class FireStoreDao {
                 .addOnSuccessListener { result ->
                     val products = result.map { document ->
                         mapDocumentToProduct(document)
-                    }.sortedBy { it.date }.toList()
+                    }.sortedByDescending { it.date }.toList()
                     productQueryHandler.onQueryResponse(products)
                 }
                 .addOnFailureListener { productQueryHandler.onQueryResponse(listOf()) }
@@ -43,7 +43,7 @@ class FireStoreDao {
                 .addOnSuccessListener { result ->
                     val products = result.map { document ->
                         mapDocumentToProduct(document)
-                    }.sortedBy { it.date }.toList()
+                    }.sortedByDescending { it.date }.toList()
                     productQueryHandler.onQueryResponse(products)
                 }
                 .addOnFailureListener { productQueryHandler.onQueryResponse(listOf()) }
