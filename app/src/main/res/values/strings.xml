@@ -18,6 +18,8 @@
     <string name="search_prices">Search price</string>
     <string name="product_bar_code">Product bar code</string>
     <string name="loading_text">Loading…</string>
+    <string name="product_info_table_header_date">Date</string>
+    <string name="product_info_table_header_price">Price</string>
 
     <!-- History view-->
 

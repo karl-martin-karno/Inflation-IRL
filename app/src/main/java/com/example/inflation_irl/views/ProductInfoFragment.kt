@@ -7,9 +7,15 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.example.inflation_irl.Product
 import com.example.inflation_irl.R
 import com.example.inflation_irl.Store
+import com.example.inflation_irl.adapter.HistoryListAdapter
+import com.example.inflation_irl.adapter.HistoryListItem
+import com.example.inflation_irl.adapter.ProductHistory
+import com.example.inflation_irl.adapter.ProductInfoListAdapter
 import com.example.inflation_irl.dao.FireStoreDao
 import com.example.inflation_irl.databinding.FragmentProductInfoBinding
 import com.example.inflation_irl.prisma.PrismaHandler
@@ -44,10 +50,11 @@ class ProductInfoFragment : Fragment() {
         // TODO delete dummy data
         binding.productInfoItemIcon.setImageResource(R.drawable.red_bull)
         binding.productInfoStoreIcon.setImageResource(R.drawable.prisma)
-        binding.productInfoTitle.text = "Example text"
+        binding.productInfoTitle.text = "Doritos Nacho Cheese Flavored Tortilla Chips"
+        binding.productInfoPrice.text = "Today: 16.5€"
 
-        binding.productTitleEditText.focusable = View.NOT_FOCUSABLE
-        binding.productPriceEditText.focusable = View.NOT_FOCUSABLE
+//        binding.productTitleEditText.focusable = View.NOT_FOCUSABLE
+//        binding.productPriceEditText.focusable = View.NOT_FOCUSABLE
 
         prismaHandler = PrismaHandler(requireContext())
         selverHandler = SelverHandler(requireContext())
@@ -56,12 +63,27 @@ class ProductInfoFragment : Fragment() {
         val selectedStore = Store.PRISMA
         val barCode = "4743050000045"
         handleBarCodeFound(barCode, selectedStore)
+
+        val dataset = getDummyData()
+        val recyclerView = binding.productItemHistoryReacyclerview
+        val layoutManager = LinearLayoutManager(requireContext())
+        recyclerView.layoutManager = layoutManager
+        recyclerView.adapter = ProductInfoListAdapter(dataset)
         return view
     }
 
+    private fun getDummyData(): MutableList<ProductHistory> {
+        val dataset = mutableListOf<ProductHistory>()
+        dataset.add(ProductHistory("15.6€", "14. jan 2022"))
+        dataset.add(ProductHistory("16.6€", "14. nov 2022"))
+        dataset.add(ProductHistory("18.6€", "14. dec 2022"))
+        dataset.add(ProductHistory("19.6€", "14. jul 2022"))
+        return dataset
+    }
+
     private fun handleBarCodeFound(barCode: String, selectedStore: Store) {
-        binding.productPriceEditText.setText(getString(R.string.loading_text))
-        binding.productTitleEditText.setText(getString(R.string.loading_text))
+//        binding.productPriceEditText.setText(getString(R.string.loading_text))
+//        binding.productTitleEditText.setText(getString(R.string.loading_text))
         when (selectedStore) {
             Store.PRISMA -> prismaHandler.getProduct(barCode) { product ->
                 handleProductFound(product)
@@ -71,8 +93,8 @@ class ProductInfoFragment : Fragment() {
     }
 
     private fun handleProductFound(product: Product) {
-        binding.productPriceEditText.setText(product.price.toString())
-        binding.productTitleEditText.setText(product.name)
+//        binding.productPriceEditText.setText(product.price.toString())
+//        binding.productTitleEditText.setText(product.name)
         Log.d("ProductInfoFragment", "handleProductFound: $product")
         CoroutineScope(IO).launch {
             product.barCode?.let { barcode ->
