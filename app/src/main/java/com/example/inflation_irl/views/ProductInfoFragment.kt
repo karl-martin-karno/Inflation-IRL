@@ -109,52 +109,52 @@ class ProductInfoFragment : Fragment() {
     }
 
     private fun handleProductFound(product: Product) {
-        if (product.name=="null") {
-            parentFragmentManager.popBackStack()
-        }
-        else {
-            Log.d("ProductInfoFragment", "handleProductFound: $product")
-            CoroutineScope(IO).launch {
-                product.barCode?.let { barcode ->
-                    fireBaseDao.getProductsByBarCodeAndStore(barcode, product.store) { products ->
-                        if (products.isEmpty()) {
-                            Toast.makeText(
-                                requireContext(),
-                                "Previous product history not found",
-                                Toast.LENGTH_SHORT
-                            )
-                                .show()
-                        } else {
-                            dataset = products
-                                .map {
-                                    ProductInfoItem(
-                                        it.price.toString(),
-                                        dateFormat.format(it.date.toDate())
-                                    )
-                                }.toTypedArray()
-                            recyclerView.adapter = ProductInfoListAdapter(dataset)
-                        }
-                    }
-                }
-                CoroutineScope(Main).launch {
-                    if (product.price == 0.0) {
-                        binding.productInfoPrice.text = getString(R.string.product_unavailable)
-                    }else{
-                        binding.productInfoPrice.text = getString(R.string.product_price_textView, product.price.toString())
-                    }
-                    if (product.name != "null") {
-                        binding.productInfoTitle.text = product.name
-                    }
-                    if (navigationType == "barcodeView")
-                        updateItemIcon(product.imageFilePath)
-                }
-                if (product.name != "Error when searching for product" && product.price != 0.0) {
-                    if (navigationType == "barcodeView" && viewModel.shouldAddToDatabase) {
-                        fireBaseDao.addProduct(product)
-                        viewModel.shouldAddToDatabase = false
+        Log.d("ProductInfoFragment", "handleProductFound: $product")
+        CoroutineScope(IO).launch {
+            product.barCode?.let { barcode ->
+                fireBaseDao.getProductsByBarCodeAndStore(barcode, product.store) { products ->
+                    if (products.isEmpty()) {
+                        Toast.makeText(
+                            requireContext(),
+                            "Previous product history not found",
+                            Toast.LENGTH_SHORT
+                        )
+                            .show()
+                    } else {
+                        dataset = products
+                            .map {
+                                ProductInfoItem(
+                                    it.price.toString(),
+                                    dateFormat.format(it.date.toDate())
+                                )
+                            }.toTypedArray()
+                        recyclerView.adapter = ProductInfoListAdapter(dataset)
                     }
                 }
             }
+            CoroutineScope(Main).launch {
+                if (product.name == "null") {
+                    Toast.makeText(requireContext(), "Invalid barcode", Toast.LENGTH_SHORT).show()
+                    parentFragmentManager.popBackStack()
+                } else {
+                    binding.productInfoTitle.text = product.name
+                    if (product.price == 0.0) {
+                        binding.productInfoPrice.text = getString(R.string.product_unavailable)
+                    } else {
+                        binding.productInfoPrice.text =
+                            getString(R.string.product_price_textView, product.price.toString())
+                    }
+                }
+                if (navigationType == "barcodeView")
+                    updateItemIcon(product.imageFilePath)
+            }
+            if (product.name != "Error when searching for product" && product.price != 0.0) {
+                if (navigationType == "barcodeView" && viewModel.shouldAddToDatabase) {
+                    fireBaseDao.addProduct(product)
+                    viewModel.shouldAddToDatabase = false
+                }
+            }
         }
+
     }
 }
