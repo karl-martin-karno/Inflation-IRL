@@ -59,9 +59,6 @@ class ProductInfoFragment : Fragment() {
 
         // barcode parser
         prismaHandler = PrismaHandler(requireContext())
-        prismaHandler.getInflationRateInEstonia { inflationRate ->
-            Log.d("InflationRate", inflationRate.toString())
-        }
 
         // Button is different for history view and bar code scanning view
         if (navigationType == "historyView") {
