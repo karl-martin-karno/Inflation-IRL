@@ -17,24 +17,16 @@ import com.example.inflation_irl.adapter.ProductInfoListAdapter
 import com.example.inflation_irl.dao.FireStoreDao
 import com.example.inflation_irl.databinding.FragmentProductInfoBinding
 import com.example.inflation_irl.prisma.PrismaHandler
-import com.example.inflation_irl.selver.SelverHandler
 import com.koushikdutta.ion.Ion
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.launch
 
-
-/**
- * A simple [Fragment] subclass.
- * Use the [ProductInfoFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
 class ProductInfoFragment : Fragment() {
 
     private var _binding: FragmentProductInfoBinding? = null
     private val binding get() = _binding!!
     private lateinit var prismaHandler: PrismaHandler
-    private lateinit var selverHandler: SelverHandler
     private val fireBaseDao: FireStoreDao = FireStoreDao()
 
     override fun onCreateView(
@@ -64,7 +56,7 @@ class ProductInfoFragment : Fragment() {
 
         // barcode parser
         prismaHandler = PrismaHandler(requireContext())
-        prismaHandler.getInflationRateInEstonia() { inflationRate ->
+        prismaHandler.getInflationRateInEstonia { inflationRate ->
             Log.d("InflationRate", inflationRate.toString())
         }
 
@@ -110,7 +102,7 @@ class ProductInfoFragment : Fragment() {
     }
 
     private fun handleBarCodeFound(barCode: String, selectedStore: String) {
-        binding.productInfoPrice.text = "Loading..."
+        binding.productInfoPrice.text = getString(R.string.loading_text)
         binding.productInfoTitle.text = ""
         when (selectedStore) {
             Store.PRISMA.name -> prismaHandler.getProduct(barCode) { product ->
