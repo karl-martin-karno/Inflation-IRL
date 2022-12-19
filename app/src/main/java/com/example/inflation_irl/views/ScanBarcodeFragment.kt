@@ -29,19 +29,11 @@ import com.example.inflation_irl.permission.PermissionUtils
 import com.example.inflation_irl.scanner.BarCodeScanner
 import com.example.inflation_irl.viewmodel.BarcodeViewModel
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.Dispatchers.Main
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import java.text.SimpleDateFormat
 import java.util.*
 
-
-/**
- * A simple [Fragment] subclass.
- * Use the [ScanBarcodeFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
 class ScanBarcodeFragment : Fragment() {
     private var _binding: FragmentScanBarcodeBinding? = null
     private val binding get() = _binding!!

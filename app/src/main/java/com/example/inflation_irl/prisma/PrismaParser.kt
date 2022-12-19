@@ -20,7 +20,7 @@ class PrismaParser {
                 val doc = Jsoup.parse(html)
                 val name = doc.getElementById("product-name")?.text().toString()
                 val priceText = (doc.getElementsByClass("whole-number")
-                    .text() + "." + doc.getElementsByClass("decimal").text());
+                    .text() + "." + doc.getElementsByClass("decimal").text())
                 var price = 0.0
                 if (priceText != ".") {
                     price = priceText.toDouble()

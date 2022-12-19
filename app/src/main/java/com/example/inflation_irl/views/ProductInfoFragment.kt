@@ -34,10 +34,9 @@ class ProductInfoFragment : Fragment() {
     private val fireBaseDao: FireStoreDao = FireStoreDao()
     private lateinit var recyclerView: RecyclerView
     private val dateFormat = SimpleDateFormat("dd. MMM yyyy, HH:mm", Locale.US)
-
     private var navigationType = ""
+    private var dataset = emptyArray<ProductInfoItem>()
 
-    var dataset = emptyArray<ProductInfoItem>()
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?

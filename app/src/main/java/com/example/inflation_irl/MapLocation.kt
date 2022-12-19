@@ -12,8 +12,8 @@ import kotlinx.coroutines.*
 import kotlinx.coroutines.Dispatchers.IO
 
 class MapLocation(private val applicationContext: Context) {
-    val TAG = "MyMapsActivity"
-    val acceptedPlaces: Array<String> = arrayOf("selver", "prisma")
+    private val TAG = "MyMapsActivity"
+    private val acceptedPlaces: Array<String> = arrayOf("selver", "prisma")
 
     @SuppressLint("MissingPermission")
     suspend fun getLocation(): Store? {
@@ -38,7 +38,7 @@ class MapLocation(private val applicationContext: Context) {
                                     "selver" -> finalMatch = Store.SELVER
                                     "prisma" -> finalMatch = Store.PRISMA
                                 }
-                                return@lit;
+                                return@lit
                             }
                         }
                     }
@@ -49,18 +49,18 @@ class MapLocation(private val applicationContext: Context) {
                     }
                 }
             }
-            Tasks.await(placeResponse);
+            Tasks.await(placeResponse)
             delay(1000) // Idiootsus kuna ma ei tea kuidas siin funktsioonis mingi Promise moodi asja tekitada :)
             Log.i(TAG, finalMatch.toString())
             finalMatch
         }
-        return match;
+        return match
     }
 
     fun stringContainsElementFromArray(string: String, array: Array<String>): Boolean {
         array.forEach {
-            if (string.contains(it, ignoreCase = true)) return true;
+            if (string.contains(it, ignoreCase = true)) return true
         }
-        return false;
+        return false
     }
 }

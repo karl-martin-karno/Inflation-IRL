@@ -13,8 +13,8 @@ import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.launch
 
 class LocationUtils {
-    val TAG = "LocationUtils"
-    val acceptedPlaces: Array<String> = arrayOf("selver", "prisma")
+    private val TAG = "LocationUtils"
+    private val acceptedPlaces: Array<String> = arrayOf("selver", "prisma")
 
     fun interface LocationHandler {
         fun onStoreFound(store: Store)

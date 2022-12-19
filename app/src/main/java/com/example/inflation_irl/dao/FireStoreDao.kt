@@ -3,7 +3,6 @@ package com.example.inflation_irl.dao
 import com.example.inflation_irl.Product
 import com.example.inflation_irl.Store
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.Query
 import com.google.firebase.firestore.QueryDocumentSnapshot
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.withContext

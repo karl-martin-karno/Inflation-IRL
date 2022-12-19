@@ -1,7 +1,6 @@
 package com.example.inflation_irl.prisma
 
 import android.content.Context
-import android.util.Log
 import com.example.inflation_irl.Product
 import com.example.inflation_irl.Store
 import com.example.inflation_irl.http.RequestHelper

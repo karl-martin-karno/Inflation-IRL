@@ -8,7 +8,6 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.RecyclerView
 import com.example.inflation_irl.Product
 import com.example.inflation_irl.R
-import com.example.inflation_irl.Store
 import com.example.inflation_irl.adapter.HistoryListAdapter
 import com.example.inflation_irl.adapter.HistoryListItem
 import com.example.inflation_irl.dao.FireStoreDao
@@ -16,11 +15,6 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.launch
 
-/**
- * A simple [Fragment] subclass.
- * Use the [HistoryFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
 class HistoryFragment : Fragment() {
 
     private val fireStoreDao = FireStoreDao()
