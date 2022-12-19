@@ -122,7 +122,8 @@ class ProductInfoFragment : Fragment() {
     }
 
     private fun handleProductFound(product: Product) {
-        binding.productInfoPrice.text = getString(R.string.product_price_textView, product.price.toString())
+        binding.productInfoPrice.text =
+            getString(R.string.product_price_textView, product.price.toString())
         binding.productInfoTitle.text = product.name
         Log.d("ProductInfoFragment", "handleProductFound: $product")
         CoroutineScope(IO).launch {
@@ -136,7 +137,14 @@ class ProductInfoFragment : Fragment() {
                         )
                             .show()
                     } else {
-                        dataset = products.map{ ProductInfoItem(it.price.toString(), it.date.toDate().toString()) }.toTypedArray()
+                        dataset = products
+                            .sortedByDescending { it.date }
+                            .map {
+                                ProductInfoItem(
+                                    it.price.toString(),
+                                    it.date.toDate().toString()
+                                )
+                            }.toTypedArray()
                         recyclerView.adapter = ProductInfoListAdapter(dataset)
                     }
                 }
