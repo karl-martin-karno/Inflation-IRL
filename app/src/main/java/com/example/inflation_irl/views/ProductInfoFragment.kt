@@ -6,7 +6,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
+import androidx.navigation.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.inflation_irl.Product
@@ -69,6 +71,11 @@ class ProductInfoFragment : Fragment() {
         val layoutManager = LinearLayoutManager(requireContext())
         recyclerView.layoutManager = layoutManager
         recyclerView.adapter = ProductInfoListAdapter(dataset)
+
+        binding.scanAnotherItemButton.setOnClickListener{
+            view.findNavController().popBackStack()
+        }
+
         return view
     }
 
