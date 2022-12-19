@@ -146,6 +146,7 @@ class ProductInfoFragment : Fragment() {
             CoroutineScope(Main).launch {
                 binding.productInfoPrice.text = getString(R.string.product_price_textView, product.price.toString())
                 binding.productInfoTitle.text = product.name
+                updateItemIcon(product.imageFilePath)
             }
             fireBaseDao.addProduct(product)
         }
