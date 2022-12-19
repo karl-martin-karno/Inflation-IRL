@@ -22,7 +22,6 @@ import com.koushikdutta.ion.Ion
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.launch
-import java.text.SimpleDateFormat
 
 class ProductInfoFragment : Fragment() {
 
@@ -31,7 +30,6 @@ class ProductInfoFragment : Fragment() {
     private lateinit var prismaHandler: PrismaHandler
     private val fireBaseDao: FireStoreDao = FireStoreDao()
     private lateinit var recyclerView: RecyclerView
-    private val dateFormat = SimpleDateFormat("dd. MMM yyyy")
 
     var dataset = emptyArray<ProductInfoItem>()
     override fun onCreateView(
@@ -138,8 +136,7 @@ class ProductInfoFragment : Fragment() {
                         )
                             .show()
                     } else {
-                        // TODO: fix timestamp format
-                        dataset = products.map{ ProductInfoItem(it.price.toString(), dateFormat.format(it.date.seconds)) }.toTypedArray()
+                        dataset = products.map{ ProductInfoItem(it.price.toString(), it.date.toDate().toString()) }.toTypedArray()
                         recyclerView.adapter = ProductInfoListAdapter(dataset)
                     }
                 }
