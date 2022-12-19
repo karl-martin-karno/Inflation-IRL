@@ -24,6 +24,7 @@ import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.Dispatchers.Main
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
+import java.util.*
 
 class ProductInfoFragment : Fragment() {
 
@@ -32,7 +33,7 @@ class ProductInfoFragment : Fragment() {
     private lateinit var prismaHandler: PrismaHandler
     private val fireBaseDao: FireStoreDao = FireStoreDao()
     private lateinit var recyclerView: RecyclerView
-    val dateFormat = SimpleDateFormat("dd. MMM yyyy")
+    private val dateFormat = SimpleDateFormat("dd. MMM yyyy, HH:mm", Locale.US)
 
     var dataset = emptyArray<ProductInfoItem>()
     override fun onCreateView(
