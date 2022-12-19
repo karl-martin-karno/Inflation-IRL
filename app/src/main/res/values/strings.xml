@@ -21,6 +21,7 @@
     <string name="product_info_table_header_date">Date</string>
     <string name="product_info_table_header_price">Price</string>
     <string name="scan_another_item_button">Scan another item</string>
+    <string name="product_price_textView">Today: %s€</string>
 
     <!-- History view-->
 

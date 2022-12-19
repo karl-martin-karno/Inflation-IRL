@@ -90,7 +90,7 @@
         android:layout_height="129dp"
         android:layout_marginTop="16dp"
         android:layout_marginEnd="32dp"
-        android:src="@drawable/doritos"
+        android:src="@drawable/default_product_icon"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/product_info_store_icon" />
 
@@ -100,7 +100,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="32dp"
         android:layout_marginTop="16dp"
-        android:src="@drawable/prisma"
+        android:src="@drawable/default_store_icon"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 

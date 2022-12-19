@@ -42,11 +42,17 @@ class HistoryListAdapter(private val dataset: MutableList<HistoryListItem>) :
             }
         )
         Ion.with(holder.itemIcon)
-            .error(R.drawable.default_history_list_icon)
+            .error(R.drawable.default_product_icon)
             .load(item.iconUrl)
 
         holder.view.setOnClickListener {
-            val bundle = bundleOf("store" to item.store, "barcode" to item.barcode, "navigation" to "historyView")
+            val bundle = bundleOf(
+                "store" to item.store,
+                "barcode" to item.barcode,
+                "iconUrl" to item.iconUrl,
+                "navigation" to "historyView"
+
+            )
             holder.view.findNavController().navigate(R.id.productInfoFragment, bundle)
         }
     }

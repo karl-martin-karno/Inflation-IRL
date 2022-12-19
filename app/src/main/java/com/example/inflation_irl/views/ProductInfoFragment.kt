@@ -6,22 +6,19 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.example.inflation_irl.Product
 import com.example.inflation_irl.R
 import com.example.inflation_irl.Store
-import com.example.inflation_irl.adapter.HistoryListAdapter
-import com.example.inflation_irl.adapter.HistoryListItem
 import com.example.inflation_irl.adapter.ProductHistory
 import com.example.inflation_irl.adapter.ProductInfoListAdapter
 import com.example.inflation_irl.dao.FireStoreDao
 import com.example.inflation_irl.databinding.FragmentProductInfoBinding
 import com.example.inflation_irl.prisma.PrismaHandler
 import com.example.inflation_irl.selver.SelverHandler
+import com.koushikdutta.ion.Ion
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.launch
@@ -46,48 +43,61 @@ class ProductInfoFragment : Fragment() {
     ): View? {
         _binding = FragmentProductInfoBinding.inflate(inflater, container, false)
         val view = binding.root
-        val _store = arguments?.getString("store") ?: ""
-        val _barcode = arguments?.getString("barcode") ?: ""
-        val navigation = arguments?.getString("navigation") ?: ""
+        val store = arguments?.getString("store") ?: ""
+        val barcode = arguments?.getString("barcode") ?: ""
+        val navigationType = arguments?.getString("navigation") ?: ""
+
+        // store icon
+        binding.productInfoStoreIcon.setImageResource(
+            when (store) {
+                Store.PRISMA.name -> R.drawable.prisma
+                Store.SELVER.name -> R.drawable.selver
+                Store.MAXIMA.name -> R.drawable.maxima
+                Store.KAUBAMAJA.name -> R.drawable.kaubamaja
+                else -> throw throw IllegalArgumentException("Unsupported store name provided")
+            }
+        )
 
         // TODO delete dummy data
-        binding.productInfoItemIcon.setImageResource(R.drawable.red_bull)
-        binding.productInfoStoreIcon.setImageResource(R.drawable.prisma)
         binding.productInfoTitle.text = "Doritos Nacho Cheese Flavored Tortilla Chips"
-        binding.productInfoPrice.text = "Today: 16.5€"
+        binding.productInfoPrice.text = getString(R.string.product_price_textView, "16.5")
 
-//        binding.productTitleEditText.focusable = View.NOT_FOCUSABLE
-//        binding.productPriceEditText.focusable = View.NOT_FOCUSABLE
-
+        // barcode parser
         prismaHandler = PrismaHandler(requireContext())
-        selverHandler = SelverHandler(requireContext())
-
-
-        val selectedStore = Store.PRISMA
-        val barCode = "4743050000045"
-        handleBarCodeFound(barCode, selectedStore)
-
         prismaHandler.getInflationRateInEstonia() { inflationRate ->
             Log.d("InflationRate", inflationRate.toString())
         }
 
-
-        if( navigation == "historyView"){
+        // Button is different for history view and bar code scanning view
+        if (navigationType == "historyView") {
             val button = binding.scanAnotherItemButton
             val parentView: ViewGroup = button.parent as ViewGroup
             parentView.removeView(button)
-        }else{
-            binding.scanAnotherItemButton.setOnClickListener{
+            val iconUrl = arguments?.getString("iconUrl") ?: ""
+            updateItemIcon(iconUrl)
+        } else {
+            binding.scanAnotherItemButton.setOnClickListener {
                 view.findNavController().popBackStack()
             }
         }
 
-        val dataset = getDummyData()
+        // Set up RecyclerView
+        val dataset = getDummyData() // TODO replace with whole history
         val recyclerView = binding.productItemHistoryReacyclerview
         val layoutManager = LinearLayoutManager(requireContext())
         recyclerView.layoutManager = layoutManager
         recyclerView.adapter = ProductInfoListAdapter(dataset)
+
+//        val selectedStore = Store.PRISMA
+//        val barCode = "4743050000045"
+        handleBarCodeFound(barcode, store)
         return view
+    }
+
+    private fun updateItemIcon(iconUrl: String) {
+        Ion.with(binding.productInfoItemIcon)
+            .error(R.drawable.default_product_icon)
+            .load(iconUrl)
     }
 
     private fun getDummyData(): MutableList<ProductHistory> {
@@ -99,20 +109,24 @@ class ProductInfoFragment : Fragment() {
         return dataset
     }
 
-    private fun handleBarCodeFound(barCode: String, selectedStore: Store) {
-//        binding.productPriceEditText.setText(getString(R.string.loading_text))
-//        binding.productTitleEditText.setText(getString(R.string.loading_text))
+    private fun handleBarCodeFound(barCode: String, selectedStore: String) {
+        binding.productInfoPrice.text = "Loading..."
+        binding.productInfoTitle.text = ""
         when (selectedStore) {
-            Store.PRISMA -> prismaHandler.getProduct(barCode) { product ->
+            Store.PRISMA.name -> prismaHandler.getProduct(barCode) { product ->
                 handleProductFound(product)
             }
-            else -> Toast.makeText(requireContext(),"Only Prisma is currently supported",Toast.LENGTH_SHORT).show()
+            else -> Toast.makeText(
+                requireContext(),
+                "Only Prisma is currently supported",
+                Toast.LENGTH_SHORT
+            ).show()
         }
     }
 
     private fun handleProductFound(product: Product) {
-//        binding.productPriceEditText.setText(product.price.toString())
-//        binding.productTitleEditText.setText(product.name)
+//        binding.productInfoPrice.text = getString(R.string.product_price_textView, product.price.toString())
+//        binding.productInfoTitle.text = product.name
         Log.d("ProductInfoFragment", "handleProductFound: $product")
         CoroutineScope(IO).launch {
             product.barCode?.let { barcode ->
