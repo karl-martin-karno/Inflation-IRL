@@ -23,7 +23,6 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.Dispatchers.Main
 import kotlinx.coroutines.launch
-import java.text.SimpleDateFormat
 
 class ProductInfoFragment : Fragment() {
 
@@ -32,7 +31,6 @@ class ProductInfoFragment : Fragment() {
     private lateinit var prismaHandler: PrismaHandler
     private val fireBaseDao: FireStoreDao = FireStoreDao()
     private lateinit var recyclerView: RecyclerView
-    private val dateFormat = SimpleDateFormat("dd. MMM yyyy")
 
     var dataset = emptyArray<ProductInfoItem>()
     override fun onCreateView(
@@ -55,10 +53,6 @@ class ProductInfoFragment : Fragment() {
                 else -> throw throw IllegalArgumentException("Unsupported store name provided")
             }
         )
-
-        // TODO delete dummy data
-        binding.productInfoTitle.text = "Doritos Nacho Cheese Flavored Tortilla Chips"
-        binding.productInfoPrice.text = getString(R.string.product_price_textView, "16.5")
 
         // barcode parser
         prismaHandler = PrismaHandler(requireContext())
@@ -137,8 +131,14 @@ class ProductInfoFragment : Fragment() {
                         )
                             .show()
                     } else {
-                        // TODO: fix timestamp format
-                        dataset = products.map{ ProductInfoItem(it.price.toString(), dateFormat.format(it.date.seconds)) }.toTypedArray()
+                        dataset = products
+                            .sortedByDescending { it.date }
+                            .map {
+                                ProductInfoItem(
+                                    it.price.toString(),
+                                    it.date.toDate().toString()
+                                )
+                            }.toTypedArray()
                         recyclerView.adapter = ProductInfoListAdapter(dataset)
                     }
                 }
