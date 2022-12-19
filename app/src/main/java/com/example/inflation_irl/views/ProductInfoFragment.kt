@@ -137,18 +137,12 @@ class ProductInfoFragment : Fragment() {
                     }
                 }
                 CoroutineScope(Main).launch {
-                    if (product.price == 0.0) {
-                        binding.productInfoPrice.text = getString(R.string.product_unavailable)
-                    }else{
-                        binding.productInfoPrice.text = getString(R.string.product_price_textView, product.price.toString())
-                    }
-                    if (product.name != "null") {
-                        binding.productInfoTitle.text = product.name
-                    }
+                    binding.productInfoPrice.text = if (product.price!=0.0) getString(R.string.product_price_textView, product.price.toString()) else "No price available"
+                    binding.productInfoTitle.text = product.name
                     if (navigationType == "barcodeView")
                         updateItemIcon(product.imageFilePath)
                 }
-                if (product.name != "Error when searching for product" && product.price != 0.0) {
+                if (product.name != "Error when searching for product" && product.price!=0.0) {
                     if (navigationType == "barcodeView" && viewModel.shouldAddToDatabase) {
                         fireBaseDao.addProduct(product)
                         viewModel.shouldAddToDatabase = false
