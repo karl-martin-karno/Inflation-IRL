@@ -134,7 +134,8 @@ class ProductInfoFragment : Fragment() {
                 binding.productInfoPrice.text =
                     getString(R.string.product_price_textView, product.price.toString())
                 binding.productInfoTitle.text = product.name
-                updateItemIcon(product.imageFilePath)
+                if (navigationType == "barcodeView")
+                    updateItemIcon(product.imageFilePath)
             }
             if (product.name != "Error when searching for product" && navigationType != "historyView") {
                 fireBaseDao.addProduct(product)
