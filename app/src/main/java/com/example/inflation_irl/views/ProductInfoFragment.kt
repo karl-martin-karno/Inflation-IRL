@@ -109,40 +109,45 @@ class ProductInfoFragment : Fragment() {
     }
 
     private fun handleProductFound(product: Product) {
-        Log.d("ProductInfoFragment", "handleProductFound: $product")
-        CoroutineScope(IO).launch {
-            product.barCode?.let { barcode ->
-                fireBaseDao.getProductsByBarCodeAndStore(barcode, product.store) { products ->
-                    if (products.isEmpty()) {
-                        Toast.makeText(
-                            requireContext(),
-                            "Previous product history not found",
-                            Toast.LENGTH_SHORT
-                        )
-                            .show()
-                    } else {
-                        dataset = products
-                            .map {
-                                ProductInfoItem(
-                                    it.price.toString(),
-                                    dateFormat.format(it.date.toDate())
-                                )
-                            }.toTypedArray()
-                        recyclerView.adapter = ProductInfoListAdapter(dataset)
+        if (product.name=="null") {
+            parentFragmentManager.popBackStack()
+        }
+        else {
+            Log.d("ProductInfoFragment", "handleProductFound: $product")
+            CoroutineScope(IO).launch {
+                product.barCode?.let { barcode ->
+                    fireBaseDao.getProductsByBarCodeAndStore(barcode, product.store) { products ->
+                        if (products.isEmpty()) {
+                            Toast.makeText(
+                                requireContext(),
+                                "Previous product history not found",
+                                Toast.LENGTH_SHORT
+                            )
+                                .show()
+                        } else {
+                            dataset = products
+                                .map {
+                                    ProductInfoItem(
+                                        it.price.toString(),
+                                        dateFormat.format(it.date.toDate())
+                                    )
+                                }.toTypedArray()
+                            recyclerView.adapter = ProductInfoListAdapter(dataset)
+                        }
                     }
                 }
-            }
-            CoroutineScope(Main).launch {
-                binding.productInfoPrice.text =
-                    getString(R.string.product_price_textView, product.price.toString())
-                binding.productInfoTitle.text = product.name
-                if (navigationType == "barcodeView")
-                    updateItemIcon(product.imageFilePath)
-            }
-            if (product.name != "Error when searching for product") {
-                if (navigationType == "barcodeView" && viewModel.shouldAddToDatabase) {
-                    fireBaseDao.addProduct(product)
-                    viewModel.shouldAddToDatabase = false
+                CoroutineScope(Main).launch {
+                    binding.productInfoPrice.text =
+                        getString(R.string.product_price_textView, product.price.toString())
+                    binding.productInfoTitle.text = product.name
+                    if (navigationType == "barcodeView")
+                        updateItemIcon(product.imageFilePath)
+                }
+                if (product.name != "Error when searching for product") {
+                    if (navigationType == "barcodeView" && viewModel.shouldAddToDatabase) {
+                        fireBaseDao.addProduct(product)
+                        viewModel.shouldAddToDatabase = false
+                    }
                 }
             }
         }
