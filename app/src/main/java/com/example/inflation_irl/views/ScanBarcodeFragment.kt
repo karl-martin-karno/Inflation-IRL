@@ -202,7 +202,7 @@ class ScanBarcodeFragment : Fragment() {
         CoroutineScope(Main).launch {
             // TODO: api is currently slow
             val store = getActivity()?.let { locationUtils.findNearestStore(it.applicationContext) }
-            if (store != null) {
+            if (store != null && !viewModel.isStoreSelected()) {
                 viewModel.selectedStore = store
                 prompt.dismiss()
             }
