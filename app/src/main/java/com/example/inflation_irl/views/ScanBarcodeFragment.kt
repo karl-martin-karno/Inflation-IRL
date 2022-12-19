@@ -12,10 +12,8 @@ import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.activity.viewModels
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
@@ -26,14 +24,15 @@ import androidx.navigation.Navigation.findNavController
 import com.example.inflation_irl.R
 import com.example.inflation_irl.Store
 import com.example.inflation_irl.databinding.FragmentScanBarcodeBinding
-import com.example.inflation_irl.http.RequestHelper
 import com.example.inflation_irl.location.LocationUtils
 import com.example.inflation_irl.permission.PermissionUtils
 import com.example.inflation_irl.scanner.BarCodeScanner
 import com.example.inflation_irl.viewmodel.BarcodeViewModel
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.Dispatchers.Main
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -46,7 +45,6 @@ import java.util.*
 class ScanBarcodeFragment : Fragment() {
     private var _binding: FragmentScanBarcodeBinding? = null
     private val binding get() = _binding!!
-    private val items = listOf(Store.PRISMA, Store.SELVER)
     private var imageFilePath: String? = null
     private val barCodeScanner: BarCodeScanner = BarCodeScanner()
     private val imageUtils: com.example.inflation_irl.image.ImageUtils =
@@ -121,6 +119,12 @@ class ScanBarcodeFragment : Fragment() {
         })
     }
 
+    override fun onResume() {
+        super.onResume()
+        if (!viewModel.isStoreSelected()) {
+            tryFindingNearestStore()
+        }
+    }
 
     private fun handleQueryProductInfo(view: ConstraintLayout) {
         val barCodeLength = binding.productBarCodeEditText.text.length
@@ -198,13 +202,21 @@ class ScanBarcodeFragment : Fragment() {
         }
     }
 
+    private fun tryFindingNearestStore() {
+        if (ContextCompat.checkSelfPermission(
+                requireContext(),
+                Manifest.permission.ACCESS_FINE_LOCATION
+            ) == PackageManager.PERMISSION_GRANTED
+        ) {
+            handleFindNearestStore()
+        }
+    }
+
     private fun handleFindNearestStore() {
-        CoroutineScope(Main).launch {
-            // TODO: api is currently slow
-            val store = getActivity()?.let { locationUtils.findNearestStore(it.applicationContext) }
-            if (store != null && !viewModel.isStoreSelected()) {
+        locationUtils.findNearestStore(requireContext()) { store ->
+            if (!viewModel.isStoreSelected()) {
                 viewModel.selectedStore = store
-                prompt.dismiss()
+                updateStoreIcon(store)
             }
         }
     }
