@@ -23,7 +23,6 @@ class LocationUtils {
     @SuppressLint("MissingPermission")
     fun findNearestStore(context: Context, locationHandler: LocationHandler) {
         CoroutineScope(IO).launch {
-            Log.d(TAG, "Searching for stores: ")
             Places.initialize(context, "AIzaSyAViygAFms699z-JFoWsDB9MzVTegVHfQ4")
             val placesClient = Places.createClient(context)
             val placeFields: List<Place.Field> = listOf(Place.Field.NAME)
@@ -33,7 +32,6 @@ class LocationUtils {
                 if (task.isSuccessful) {
                     val response = task.result
                     val placesFound = response.placeLikelihoods.map { it.place.name }
-                    Log.d(TAG, "Places found: $placesFound")
                     placesFound.forEach { place ->
                         val match =
                             acceptedPlaces.filter {
