@@ -27,6 +27,7 @@ class BarCodeScanner {
             scanner.process(image)
                 .addOnSuccessListener { barcodes ->
                     if (barcodes.isEmpty()) {
+                        imageView.setImageBitmap(bitmap)
                         barCodeHandler.onBarcodeRead(BARCODE_NOT_FOUND, false)
                     } else {
                         val barCode = barcodes[0].displayValue
