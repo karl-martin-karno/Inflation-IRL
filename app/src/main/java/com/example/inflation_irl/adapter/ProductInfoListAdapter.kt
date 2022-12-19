@@ -8,7 +8,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.inflation_irl.R
 
 
-class ProductInfoListAdapter(private val dataList: MutableList<ProductHistory>) :
+class ProductInfoListAdapter(private val dataList: Array<ProductInfoItem>) :
     RecyclerView.Adapter<ProductInfoListAdapter.ViewHolder>() {
 
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
@@ -31,4 +31,4 @@ class ProductInfoListAdapter(private val dataList: MutableList<ProductHistory>) 
     override fun getItemCount() = dataList.size
 }
 
-data class ProductHistory(val price: String, val date: String)
+data class ProductInfoItem(val price: String, val date: String)

@@ -9,10 +9,11 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.example.inflation_irl.Product
 import com.example.inflation_irl.R
 import com.example.inflation_irl.Store
-import com.example.inflation_irl.adapter.ProductHistory
+import com.example.inflation_irl.adapter.ProductInfoItem
 import com.example.inflation_irl.adapter.ProductInfoListAdapter
 import com.example.inflation_irl.dao.FireStoreDao
 import com.example.inflation_irl.databinding.FragmentProductInfoBinding
@@ -21,6 +22,7 @@ import com.koushikdutta.ion.Ion
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.launch
+import java.text.SimpleDateFormat
 
 class ProductInfoFragment : Fragment() {
 
@@ -28,7 +30,10 @@ class ProductInfoFragment : Fragment() {
     private val binding get() = _binding!!
     private lateinit var prismaHandler: PrismaHandler
     private val fireBaseDao: FireStoreDao = FireStoreDao()
+    private lateinit var recyclerView: RecyclerView
+    private val dateFormat = SimpleDateFormat("dd. MMM yyyy")
 
+    var dataset = emptyArray<ProductInfoItem>()
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -74,11 +79,13 @@ class ProductInfoFragment : Fragment() {
         }
 
         // Set up RecyclerView
-        val dataset = getDummyData() // TODO replace with whole history
-        val recyclerView = binding.productItemHistoryReacyclerview
+//        val dataset = getDummyData() // TODO replace with whole history
+        recyclerView = binding.productItemHistoryReacyclerview
         val layoutManager = LinearLayoutManager(requireContext())
         recyclerView.layoutManager = layoutManager
+
         recyclerView.adapter = ProductInfoListAdapter(dataset)
+
 
 //        val selectedStore = Store.PRISMA
 //        val barCode = "4743050000045"
@@ -92,12 +99,12 @@ class ProductInfoFragment : Fragment() {
             .load(iconUrl)
     }
 
-    private fun getDummyData(): MutableList<ProductHistory> {
-        val dataset = mutableListOf<ProductHistory>()
-        dataset.add(ProductHistory("15.6€", "14. jan 2022"))
-        dataset.add(ProductHistory("16.6€", "14. nov 2022"))
-        dataset.add(ProductHistory("18.6€", "14. dec 2022"))
-        dataset.add(ProductHistory("19.6€", "14. jul 2022"))
+    private fun getDummyData(): MutableList<ProductInfoItem> {
+        val dataset = mutableListOf<ProductInfoItem>()
+        dataset.add(ProductInfoItem("15.6€", "14. jan 2022"))
+        dataset.add(ProductInfoItem("16.6€", "14. nov 2022"))
+        dataset.add(ProductInfoItem("18.6€", "14. dec 2022"))
+        dataset.add(ProductInfoItem("19.6€", "14. jul 2022"))
         return dataset
     }
 
@@ -117,6 +124,7 @@ class ProductInfoFragment : Fragment() {
     }
 
     private fun handleProductFound(product: Product) {
+        // TODO: get price and name of searched item
 //        binding.productInfoPrice.text = getString(R.string.product_price_textView, product.price.toString())
 //        binding.productInfoTitle.text = product.name
         Log.d("ProductInfoFragment", "handleProductFound: $product")
@@ -131,15 +139,13 @@ class ProductInfoFragment : Fragment() {
                         )
                             .show()
                     } else {
-                        products.forEach {
-                            Log.d("ProductInfoFragment", "handleProductFound: $it")
-                            // TODO: Show all these product data points with time and price in a list
-                        }
+                        // TODO: fix timestamp format
+                        dataset = products.map{ ProductInfoItem(it.price.toString(), dateFormat.format(it.date.seconds)) }.toTypedArray()
+                        recyclerView.adapter = ProductInfoListAdapter(dataset)
                     }
                 }
             }
             fireBaseDao.addProduct(product)
         }
-
     }
 }
