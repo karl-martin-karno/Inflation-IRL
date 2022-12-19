@@ -46,7 +46,7 @@ class HistoryListAdapter(private val dataset: MutableList<HistoryListItem>) :
             .load(item.iconUrl)
 
         holder.view.setOnClickListener {
-            val bundle = bundleOf("store" to item.store, "barcode" to item.barcode)
+            val bundle = bundleOf("store" to item.store, "barcode" to item.barcode, "navigation" to "historyView")
             holder.view.findNavController().navigate(R.id.productInfoFragment, bundle)
         }
     }

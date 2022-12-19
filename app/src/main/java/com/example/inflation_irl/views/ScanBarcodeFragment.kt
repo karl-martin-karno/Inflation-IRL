@@ -140,7 +140,8 @@ class ScanBarcodeFragment : Fragment() {
         if (viewModel.selectedStore == Store.PRISMA) {
             val bundle = bundleOf(
                 "store" to Store.PRISMA.name,
-                "barcode" to "4743050000045"
+                "barcode" to "4743050000045",
+                "navigation" to "barcodeView"
             )
             findNavController(view).navigate(R.id.productInfoFragment2, bundle)
         } else {

@@ -48,6 +48,7 @@ class ProductInfoFragment : Fragment() {
         val view = binding.root
         val _store = arguments?.getString("store") ?: ""
         val _barcode = arguments?.getString("barcode") ?: ""
+        val navigation = arguments?.getString("navigation") ?: ""
 
         // TODO delete dummy data
         binding.productInfoItemIcon.setImageResource(R.drawable.red_bull)
@@ -66,16 +67,22 @@ class ProductInfoFragment : Fragment() {
         val barCode = "4743050000045"
         handleBarCodeFound(barCode, selectedStore)
 
+
+        if( navigation == "historyView"){
+            val button = binding.scanAnotherItemButton
+            val parentView: ViewGroup = button.parent as ViewGroup
+            parentView.removeView(button)
+        }else{
+            binding.scanAnotherItemButton.setOnClickListener{
+                view.findNavController().popBackStack()
+            }
+        }
+
         val dataset = getDummyData()
         val recyclerView = binding.productItemHistoryReacyclerview
         val layoutManager = LinearLayoutManager(requireContext())
         recyclerView.layoutManager = layoutManager
         recyclerView.adapter = ProductInfoListAdapter(dataset)
-
-        binding.scanAnotherItemButton.setOnClickListener{
-            view.findNavController().popBackStack()
-        }
-
         return view
     }
 
