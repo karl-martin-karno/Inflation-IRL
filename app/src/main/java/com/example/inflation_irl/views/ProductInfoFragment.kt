@@ -67,6 +67,10 @@ class ProductInfoFragment : Fragment() {
         val barCode = "4743050000045"
         handleBarCodeFound(barCode, selectedStore)
 
+        prismaHandler.getInflationRateInEstonia() { inflationRate ->
+            Log.d("InflationRate", inflationRate.toString())
+        }
+
 
         if( navigation == "historyView"){
             val button = binding.scanAnotherItemButton

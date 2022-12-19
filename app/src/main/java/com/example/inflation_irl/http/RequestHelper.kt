@@ -1,6 +1,7 @@
 package com.example.inflation_irl.http
 
 import android.content.Context
+import android.util.Log
 import com.example.inflation_irl.Store
 import com.koushikdutta.ion.Ion
 
@@ -25,7 +26,7 @@ class RequestHelper(
             Store.PRISMA -> PRISMA_BASE_URL + barCode
             Store.SELVER -> SELVER_BASE_URL + barCode
             Store.MAXIMA -> PRISMA_BASE_URL + barCode
-            Store.KAUBAMAJA-> KAUBAMAJA_BASE_URL + barCode
+            Store.KAUBAMAJA -> KAUBAMAJA_BASE_URL + barCode
         }
     }
 
@@ -70,5 +71,20 @@ class RequestHelper(
                     requestHandler.onResponse(htmlResponse)
                 }
             }
+    }
+
+    fun getInflationRateInEstonia(requestHandler: RequestHandler) {
+        val url = "https://api.api-ninjas.com/v1/inflation?country=Estonia"
+        Ion.with(mContext)
+            .load(url)
+            .setHeader("X-Api-Key", "OE1X8aWGiPtCw/LdPLPPTA==ZKmrdrF07epTFe0q")
+            .asString()
+            .setCallback { e, htmlResponse ->
+                Log.d("RequestHelper", "getInflationRateInEstonia: $htmlResponse")
+                if (e == null) {
+                    requestHandler.onResponse(htmlResponse)
+                }
+            }
+
     }
 }
