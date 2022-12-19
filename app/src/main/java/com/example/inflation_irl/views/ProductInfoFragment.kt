@@ -21,6 +21,7 @@ import com.example.inflation_irl.prisma.PrismaHandler
 import com.koushikdutta.ion.Ion
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers.IO
+import kotlinx.coroutines.Dispatchers.Main
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 
@@ -124,9 +125,6 @@ class ProductInfoFragment : Fragment() {
     }
 
     private fun handleProductFound(product: Product) {
-        // TODO: get price and name of searched item
-//        binding.productInfoPrice.text = getString(R.string.product_price_textView, product.price.toString())
-//        binding.productInfoTitle.text = product.name
         Log.d("ProductInfoFragment", "handleProductFound: $product")
         CoroutineScope(IO).launch {
             product.barCode?.let { barcode ->
@@ -144,6 +142,10 @@ class ProductInfoFragment : Fragment() {
                         recyclerView.adapter = ProductInfoListAdapter(dataset)
                     }
                 }
+            }
+            CoroutineScope(Main).launch {
+                binding.productInfoPrice.text = getString(R.string.product_price_textView, product.price.toString())
+                binding.productInfoTitle.text = product.name
             }
             fireBaseDao.addProduct(product)
         }
