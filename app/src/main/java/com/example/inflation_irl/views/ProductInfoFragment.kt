@@ -124,9 +124,8 @@ class ProductInfoFragment : Fragment() {
     }
 
     private fun handleProductFound(product: Product) {
-        // TODO: get price and name of searched item
-//        binding.productInfoPrice.text = getString(R.string.product_price_textView, product.price.toString())
-//        binding.productInfoTitle.text = product.name
+        binding.productInfoPrice.text = getString(R.string.product_price_textView, product.price.toString())
+        binding.productInfoTitle.text = product.name
         Log.d("ProductInfoFragment", "handleProductFound: $product")
         CoroutineScope(IO).launch {
             product.barCode?.let { barcode ->
