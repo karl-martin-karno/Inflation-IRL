@@ -148,7 +148,9 @@ class ProductInfoFragment : Fragment() {
                 binding.productInfoTitle.text = product.name
                 updateItemIcon(product.imageFilePath)
             }
-            fireBaseDao.addProduct(product)
+            if(product.name != "Error when searching for product") {
+                fireBaseDao.addProduct(product)
+            }
         }
     }
 }
