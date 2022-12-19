@@ -22,6 +22,7 @@ import com.koushikdutta.ion.Ion
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.Dispatchers.Main
+import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.*
@@ -137,7 +138,19 @@ class ProductInfoFragment : Fragment() {
                     updateItemIcon(product.imageFilePath)
             }
             if (product.name != "Error when searching for product" && navigationType != "historyView") {
-                fireBaseDao.addProduct(product)
+                var isDuplicate = false;
+                fireBaseDao.getProductsByBarCodeAndStore(product.barCode.toString(), product.store) { products ->
+                    isDuplicate = products.any { e ->
+                        e.price==product.price
+                        }
+                    if (!isDuplicate) {
+                        Log.v("ProductInfoFragment", "Success")
+                        GlobalScope.launch { fireBaseDao.addProduct(product) }
+                    }
+                    else {
+                        Log.v("ProductInfoFragment", "Copy of item already exists")
+                    }
+                }
             }
         }
     }
