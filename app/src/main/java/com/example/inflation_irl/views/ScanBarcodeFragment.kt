@@ -19,7 +19,7 @@ import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
+import androidx.fragment.app.activityViewModels
 import androidx.navigation.Navigation.findNavController
 import com.example.inflation_irl.R
 import com.example.inflation_irl.Store
@@ -44,7 +44,7 @@ class ScanBarcodeFragment : Fragment() {
     private val permissionUtils: PermissionUtils = PermissionUtils()
     private val locationUtils: LocationUtils = LocationUtils()
     private val prompt = GridLayoutDialogFragment(::selectStore)
-    private val viewModel: BarcodeViewModel by viewModels()
+    private val viewModel: BarcodeViewModel by activityViewModels()
 
     companion object {
         const val MY_PERMISSIONS_REQUEST_LOCATION = 99
@@ -130,6 +130,7 @@ class ScanBarcodeFragment : Fragment() {
         }
 
         if (viewModel.selectedStore == Store.PRISMA) {
+            viewModel.shouldAddToDatabase = true
             val bundle = bundleOf(
                 "store" to Store.PRISMA.name,
                 "barcode" to binding.productBarCodeEditText.text.toString(),

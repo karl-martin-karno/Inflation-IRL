@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -18,11 +19,11 @@ import com.example.inflation_irl.adapter.ProductInfoListAdapter
 import com.example.inflation_irl.dao.FireStoreDao
 import com.example.inflation_irl.databinding.FragmentProductInfoBinding
 import com.example.inflation_irl.prisma.PrismaHandler
+import com.example.inflation_irl.viewmodel.BarcodeViewModel
 import com.koushikdutta.ion.Ion
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.Dispatchers.Main
-import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.*
@@ -37,6 +38,7 @@ class ProductInfoFragment : Fragment() {
     private val dateFormat = SimpleDateFormat("dd. MMM yyyy, HH:mm", Locale.US)
     private var navigationType = ""
     private var dataset = emptyArray<ProductInfoItem>()
+    private val viewModel: BarcodeViewModel by activityViewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -137,19 +139,10 @@ class ProductInfoFragment : Fragment() {
                 if (navigationType == "barcodeView")
                     updateItemIcon(product.imageFilePath)
             }
-            if (product.name != "Error when searching for product" && navigationType != "historyView") {
-                var isDuplicate = false;
-                fireBaseDao.getProductsByBarCodeAndStore(product.barCode.toString(), product.store) { products ->
-                    isDuplicate = products.any { e ->
-                        e.price==product.price
-                        }
-                    if (!isDuplicate) {
-                        Log.v("ProductInfoFragment", "Success")
-                        GlobalScope.launch { fireBaseDao.addProduct(product) }
-                    }
-                    else {
-                        Log.v("ProductInfoFragment", "Copy of item already exists")
-                    }
+            if (product.name != "Error when searching for product") {
+                if (navigationType == "barcodeView" && viewModel.shouldAddToDatabase) {
+                    fireBaseDao.addProduct(product)
+                    viewModel.shouldAddToDatabase = false
                 }
             }
         }
