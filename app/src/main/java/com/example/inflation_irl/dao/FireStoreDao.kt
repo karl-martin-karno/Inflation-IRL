@@ -37,7 +37,6 @@ class FireStoreDao {
     suspend fun getProductsByBarCodeAndStore(barCode: String, store: Store, productQueryHandler: ProductQueryHandler) {
         withContext(IO) {
             db.collection(COLLECTION_PRODUCTS)
-//                .orderBy("date", Query.Direction.DESCENDING) // TODO request fails with this
                 .whereEqualTo("barCode", barCode)
                 .whereEqualTo("store", store)
                 .get()
