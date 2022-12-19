@@ -124,7 +124,7 @@ class ProductInfoFragment : Fragment() {
                         dataset = products
                             .map {
                                 ProductInfoItem(
-                                    it.price.toString(),
+                                    if (it.price == 0.0) "-" else it.price.toString(),
                                     dateFormat.format(it.date.toDate())
                                 )
                             }.toTypedArray()
@@ -148,13 +148,12 @@ class ProductInfoFragment : Fragment() {
                 if (navigationType == "barcodeView")
                     updateItemIcon(product.imageFilePath)
             }
-            if (product.name != "Error when searching for product" && product.price != 0.0) {
+            if (product.name != "Error when searching for product") {
                 if (navigationType == "barcodeView" && viewModel.shouldAddToDatabase) {
                     fireBaseDao.addProduct(product)
                     viewModel.shouldAddToDatabase = false
                 }
             }
         }
-
     }
 }
