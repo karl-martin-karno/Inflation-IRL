@@ -20,6 +20,7 @@
     <string name="loading_text">Loading…</string>
     <string name="product_info_table_header_date">Date</string>
     <string name="product_info_table_header_price">Price</string>
+    <string name="scan_another_item_button">Scan another item</string>
 
     <!-- History view-->
 
