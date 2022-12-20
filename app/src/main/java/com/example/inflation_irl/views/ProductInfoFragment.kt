@@ -148,7 +148,7 @@ class ProductInfoFragment : Fragment() {
                 if (navigationType == "barcodeView")
                     updateItemIcon(product.imageFilePath)
             }
-            if (product.name != "Error when searching for product") {
+            if (product.name != "Error when searching for product" && product.name != "null") {
                 if (navigationType == "barcodeView" && viewModel.shouldAddToDatabase) {
                     fireBaseDao.addProduct(product)
                     viewModel.shouldAddToDatabase = false
