@@ -113,14 +113,7 @@ class ProductInfoFragment : Fragment() {
         CoroutineScope(IO).launch {
             product.barCode?.let { barcode ->
                 fireBaseDao.getProductsByBarCodeAndStore(barcode, product.store) { products ->
-                    if (products.isEmpty()) {
-                        Toast.makeText(
-                            requireContext(),
-                            "Previous product history not found",
-                            Toast.LENGTH_SHORT
-                        )
-                            .show()
-                    } else {
+                    if (!products.isEmpty()) {
                         dataset = products
                             .map {
                                 ProductInfoItem(
@@ -147,11 +140,11 @@ class ProductInfoFragment : Fragment() {
                 }
                 if (navigationType == "barcodeView")
                     updateItemIcon(product.imageFilePath)
-            }
-            if (product.name != "Error when searching for product" && product.name != "null") {
-                if (navigationType == "barcodeView" && viewModel.shouldAddToDatabase) {
-                    fireBaseDao.addProduct(product)
-                    viewModel.shouldAddToDatabase = false
+                if (product.name != "Error when searching for product" && product.name != "null") {
+                    if (navigationType == "barcodeView" && viewModel.shouldAddToDatabase) {
+                        fireBaseDao.addProduct(product)
+                        viewModel.shouldAddToDatabase = false
+                    }
                 }
             }
         }
